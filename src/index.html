@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>Data-Store-Components</title>
+
+  <link href="/build/data-store.css" rel="stylesheet">
+  <script src="/build/data-store.js"></script>
+
+  <style>
+    html{
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+
+    body{
+      height: 100%;
+      width: 100%;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: 277px 1fr;
+      grid-template-rows: 75px 100%;
+      grid-template-areas: ". .";
+    }
+
+    #sidebar{
+      grid-column: 1/2;
+      grid-row: 1 / span 2;
+    }
+
+    #header{
+      grid-column: 2/2;
+      grid-row: 1/2;
+    }
+
+    #table{
+      grid-column: 2/2;
+      grid-row: 2/2;
+    }
+  </style>
+</head>
+
+<body class="grid-container">
+
+  <data-store-sidebar id='sidebar'></data-store-sidebar>
+
+  <data-store-header id='header'></data-store-header>
+  <data-store-table id='table'></data-store-table>
+
+</body>
+
+</html>

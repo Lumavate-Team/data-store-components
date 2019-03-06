@@ -1,0 +1,30 @@
+{
+  "name": "data-store-components",
+  "version": "0.0.1",
+  "description": "Data Store Components",
+  "module": "dist/esm/index.js",
+  "main": "dist/index.js",
+  "unpkg": "dist/ionic.js",
+  "types": "dist/types/components.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "stencil build --docs",
+    "postbuild": "./postbuild.sh",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lumavate-Team/lumavate-base-components.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@stencil/core": "~0.18.0",
+    "@stencil/sass": "^0.1.1"
+  },
+  "license": "MIT"
+}
