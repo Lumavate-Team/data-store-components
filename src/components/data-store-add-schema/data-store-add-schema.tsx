@@ -143,36 +143,21 @@ export class AddSchema {
       "Content-Type": "application/json",
     })
 
-    let newType = {
-      "name": this.tableName,
-      "scope": "experience"
-    }
-
-    console.log(this.columns)
-    return fetch('http://localhost:5005/ic/hjgkjhg/type', {
+    return fetch('http://localhost:5005/ic/hjgkjhg/' + this.tableName + '/schema', {
       headers: reqHeaders,
       method: 'post',
-      body: JSON.stringify(newType)
+      body: JSON.stringify(this.columns)
     }).then(rsp => {
       return rsp.json()
     }).then(() => {
-      return fetch('http://localhost:5005/ic/hjgkjhg/' + this.tableName + '/schema', {
-        headers: reqHeaders,
-        method: 'post',
-        body: JSON.stringify(this.columns)
-      }).then(rsp => {
-        return rsp.json()
-      }).then(() => {
-        // debugger
-        this.addSchemaEvent.emit(this.tableName)
-        this.cancel()
-      }).catch((err) => {
-        console.error('Failed to add schema to table', err);
-      })
+      // debugger
+      this.addSchemaEvent.emit(this.tableName)
+      this.cancel()
     }).catch((err) => {
-      console.error('Failed to create new table', err)
+      console.error('Failed to add schema to table', err);
     })
   }
+
 
 
 
