@@ -20,24 +20,18 @@ export class DataStoreSidebar {
   @Event({ eventName: 'table', composed: true, bubbles: true, cancelable: false }) tableEvent: EventEmitter
 
   componentWillLoad() {
-    console.log('sidebarWillLoad')
     return this.updateSidebar()
   }
 
   componentWillUpdate() {
-    console.log('sidebarWillUpdate')
-
     this.studioRepeater.setData(this.studioTables)
     this.experienceRepeater.setData(this.experienceTables)
   }
 
 
   componentDidLoad() {
-    console.log('sidebarDidLoad')
-
     let self = this
     setTimeout(function () {
-      console.log('sidebarTimeout')
       self.studioRepeater.setData(self.studioTables)
       self.experienceRepeater.setData(self.experienceTables)
       setTimeout(function () {
@@ -151,7 +145,6 @@ export class DataStoreSidebar {
         } else {
           let self = this
           setTimeout(function () {
-            console.log(tableName)
             self.highlightRow(tableName)
 
           }, 150)
@@ -164,7 +157,6 @@ export class DataStoreSidebar {
   }
 
   render() {
-    console.log('sidebar-render')
     let template = `<div class='table-item'>
       <div class='table-name'>
       {name}</div>
