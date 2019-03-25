@@ -19,11 +19,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Lumavate-Team/lumavate-base-components.git"
+    "url": "https://github.com/Lumavate-Team/data-store-service.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@material/form-field": "1.0.1",
+    "@material/textfield": "1.0.1",
+    "@material/select": "1.0.1"
+  },
   "devDependencies": {
-    "@stencil/core": "~0.18.0",
+    "@stencil/core": "0.18.0",
     "@stencil/sass": "^0.1.1"
   },
   "license": "MIT"

@@ -12,11 +12,48 @@ import '@stencil/core';
 
 export namespace Components {
 
-  interface DataStoreHeader {
-    'temp': string;
+  interface DataStoreAddSchema {
+    'header': boolean;
+    'schema': any;
+    'updateColumns': (tableName?: string, columns?: { 'columnName': string; 'type': string; 'devName': string; 'options': string; }[]) => void;
   }
-  interface DataStoreHeaderAttributes extends StencilHTMLAttributes {
-    'temp'?: string;
+  interface DataStoreAddSchemaAttributes extends StencilHTMLAttributes {
+    'header'?: boolean;
+    'onUpdate'?: (event: CustomEvent) => void;
+    'schema'?: any;
+  }
+
+  interface DataStoreDeleteTable {
+    'getTableInfo': (tableId: any, tableName: any) => void;
+    'header': boolean;
+    'schema': any;
+  }
+  interface DataStoreDeleteTableAttributes extends StencilHTMLAttributes {
+    'header'?: boolean;
+    'onAddSchema'?: (event: CustomEvent) => void;
+    'schema'?: any;
+  }
+
+  interface DataStoreEditSchema {
+    'componentWillUpdate': () => void;
+    'header': boolean;
+    'schema': any;
+    'updateColumns': (tableName: any, columns: any) => void;
+  }
+  interface DataStoreEditSchemaAttributes extends StencilHTMLAttributes {
+    'header'?: boolean;
+    'onUpdate'?: (event: CustomEvent) => void;
+    'schema'?: any;
+  }
+
+  interface DataStoreFileUtil {
+    'header': boolean;
+    'openFileUtil': (tableName: any, apiUrl: any) => void;
+    'schema': any;
+  }
+  interface DataStoreFileUtilAttributes extends StencilHTMLAttributes {
+    'header'?: boolean;
+    'schema'?: any;
   }
 
   interface DataStoreSidebarItem {
@@ -25,6 +62,7 @@ export namespace Components {
   }
   interface DataStoreSidebarItemAttributes extends StencilHTMLAttributes {
     'header'?: string;
+    'onTable'?: (event: CustomEvent) => void;
     'tables'?: any;
   }
 
@@ -32,7 +70,17 @@ export namespace Components {
     'temp': string;
   }
   interface DataStoreSidebarAttributes extends StencilHTMLAttributes {
+    'onTable'?: (event: CustomEvent) => void;
     'temp'?: string;
+  }
+
+  interface DataStoreTableItem {
+    'header': boolean;
+    'row': any;
+  }
+  interface DataStoreTableItemAttributes extends StencilHTMLAttributes {
+    'header'?: boolean;
+    'row'?: any;
   }
 
   interface DataStoreTable {
@@ -41,28 +89,65 @@ export namespace Components {
   interface DataStoreTableAttributes extends StencilHTMLAttributes {
     'temp'?: string;
   }
+
+  interface DataStoreToast {
+    'line1': string;
+    'line2': string;
+  }
+  interface DataStoreToastAttributes extends StencilHTMLAttributes {
+    'line1'?: string;
+    'line2'?: string;
+  }
 }
 
 declare global {
   interface StencilElementInterfaces {
-    'DataStoreHeader': Components.DataStoreHeader;
+    'DataStoreAddSchema': Components.DataStoreAddSchema;
+    'DataStoreDeleteTable': Components.DataStoreDeleteTable;
+    'DataStoreEditSchema': Components.DataStoreEditSchema;
+    'DataStoreFileUtil': Components.DataStoreFileUtil;
     'DataStoreSidebarItem': Components.DataStoreSidebarItem;
     'DataStoreSidebar': Components.DataStoreSidebar;
+    'DataStoreTableItem': Components.DataStoreTableItem;
     'DataStoreTable': Components.DataStoreTable;
+    'DataStoreToast': Components.DataStoreToast;
   }
 
   interface StencilIntrinsicElements {
-    'data-store-header': Components.DataStoreHeaderAttributes;
+    'data-store-add-schema': Components.DataStoreAddSchemaAttributes;
+    'data-store-delete-table': Components.DataStoreDeleteTableAttributes;
+    'data-store-edit-schema': Components.DataStoreEditSchemaAttributes;
+    'data-store-file-util': Components.DataStoreFileUtilAttributes;
     'data-store-sidebar-item': Components.DataStoreSidebarItemAttributes;
     'data-store-sidebar': Components.DataStoreSidebarAttributes;
+    'data-store-table-item': Components.DataStoreTableItemAttributes;
     'data-store-table': Components.DataStoreTableAttributes;
+    'data-store-toast': Components.DataStoreToastAttributes;
   }
 
 
-  interface HTMLDataStoreHeaderElement extends Components.DataStoreHeader, HTMLStencilElement {}
-  var HTMLDataStoreHeaderElement: {
-    prototype: HTMLDataStoreHeaderElement;
-    new (): HTMLDataStoreHeaderElement;
+  interface HTMLDataStoreAddSchemaElement extends Components.DataStoreAddSchema, HTMLStencilElement {}
+  var HTMLDataStoreAddSchemaElement: {
+    prototype: HTMLDataStoreAddSchemaElement;
+    new (): HTMLDataStoreAddSchemaElement;
+  };
+
+  interface HTMLDataStoreDeleteTableElement extends Components.DataStoreDeleteTable, HTMLStencilElement {}
+  var HTMLDataStoreDeleteTableElement: {
+    prototype: HTMLDataStoreDeleteTableElement;
+    new (): HTMLDataStoreDeleteTableElement;
+  };
+
+  interface HTMLDataStoreEditSchemaElement extends Components.DataStoreEditSchema, HTMLStencilElement {}
+  var HTMLDataStoreEditSchemaElement: {
+    prototype: HTMLDataStoreEditSchemaElement;
+    new (): HTMLDataStoreEditSchemaElement;
+  };
+
+  interface HTMLDataStoreFileUtilElement extends Components.DataStoreFileUtil, HTMLStencilElement {}
+  var HTMLDataStoreFileUtilElement: {
+    prototype: HTMLDataStoreFileUtilElement;
+    new (): HTMLDataStoreFileUtilElement;
   };
 
   interface HTMLDataStoreSidebarItemElement extends Components.DataStoreSidebarItem, HTMLStencilElement {}
@@ -77,24 +162,46 @@ declare global {
     new (): HTMLDataStoreSidebarElement;
   };
 
+  interface HTMLDataStoreTableItemElement extends Components.DataStoreTableItem, HTMLStencilElement {}
+  var HTMLDataStoreTableItemElement: {
+    prototype: HTMLDataStoreTableItemElement;
+    new (): HTMLDataStoreTableItemElement;
+  };
+
   interface HTMLDataStoreTableElement extends Components.DataStoreTable, HTMLStencilElement {}
   var HTMLDataStoreTableElement: {
     prototype: HTMLDataStoreTableElement;
     new (): HTMLDataStoreTableElement;
   };
 
+  interface HTMLDataStoreToastElement extends Components.DataStoreToast, HTMLStencilElement {}
+  var HTMLDataStoreToastElement: {
+    prototype: HTMLDataStoreToastElement;
+    new (): HTMLDataStoreToastElement;
+  };
+
   interface HTMLElementTagNameMap {
-    'data-store-header': HTMLDataStoreHeaderElement
+    'data-store-add-schema': HTMLDataStoreAddSchemaElement
+    'data-store-delete-table': HTMLDataStoreDeleteTableElement
+    'data-store-edit-schema': HTMLDataStoreEditSchemaElement
+    'data-store-file-util': HTMLDataStoreFileUtilElement
     'data-store-sidebar-item': HTMLDataStoreSidebarItemElement
     'data-store-sidebar': HTMLDataStoreSidebarElement
+    'data-store-table-item': HTMLDataStoreTableItemElement
     'data-store-table': HTMLDataStoreTableElement
+    'data-store-toast': HTMLDataStoreToastElement
   }
 
   interface ElementTagNameMap {
-    'data-store-header': HTMLDataStoreHeaderElement;
+    'data-store-add-schema': HTMLDataStoreAddSchemaElement;
+    'data-store-delete-table': HTMLDataStoreDeleteTableElement;
+    'data-store-edit-schema': HTMLDataStoreEditSchemaElement;
+    'data-store-file-util': HTMLDataStoreFileUtilElement;
     'data-store-sidebar-item': HTMLDataStoreSidebarItemElement;
     'data-store-sidebar': HTMLDataStoreSidebarElement;
+    'data-store-table-item': HTMLDataStoreTableItemElement;
     'data-store-table': HTMLDataStoreTableElement;
+    'data-store-toast': HTMLDataStoreToastElement;
   }
 
 

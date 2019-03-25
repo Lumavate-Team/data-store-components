@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Data-Store-Components</title>
 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+  <link href="http://localhost:3334/build/luma-base.css" rel="stylesheet">
+  <script src="http://localhost:3334/build/luma-base.js"></script>
   <link href="/build/data-store.css" rel="stylesheet">
   <script src="/build/data-store.js"></script>
 
@@ -19,28 +24,23 @@
     body{
       height: 100%;
       width: 100%;
+      margin: 0px;
     }
 
     .grid-container {
       display: grid;
       grid-template-columns: 277px 1fr;
-      grid-template-rows: 75px 100%;
-      grid-template-areas: ". .";
+      grid-template-rows: 1fr;
     }
 
     #sidebar{
       grid-column: 1/2;
-      grid-row: 1 / span 2;
-    }
-
-    #header{
-      grid-column: 2/2;
-      grid-row: 1/2;
+      grid-row: 1 ;
     }
 
     #table{
       grid-column: 2/2;
-      grid-row: 2/2;
+      grid-row: 1;
     }
   </style>
 </head>
@@ -49,9 +49,7 @@
 
   <data-store-sidebar id='sidebar'></data-store-sidebar>
 
-  <data-store-header id='header'></data-store-header>
   <data-store-table id='table'></data-store-table>
-
 </body>
 
 </html>
