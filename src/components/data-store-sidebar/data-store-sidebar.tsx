@@ -40,8 +40,19 @@ export class DataStoreSidebar {
       console.log('sidebarTimeout')
       self.studioRepeater.setData(self.studioTables)
       self.experienceRepeater.setData(self.experienceTables)
-    }, 150)
+      setTimeout(function () {
+        if (self.initialLoad) {
+          self.initialLoad = false
+          if (self.experienceTables.length > 0) {
+            self.highlightRow(self.experienceTables[0].name)
+          } else {
+            self.highlightRow(self.studioTables[0].name)
+          }
+        }
+      }, 150)
+    }, 200)
   }
+
   @Listen('onRowPress')
   onPressListener(event) {
     let repeater = event.path[0]
@@ -74,6 +85,27 @@ export class DataStoreSidebar {
     }
   }
 
+  // @Listen('onChange')
+  // onChangeListener(event) {
+  //   if(event.srcElement.tagName != 'DATA-STORE-ADD-SCHEMA'){
+  //     this.columns[event.detail.lumaRowIndex][event.path[0].getAttribute('row-key')] = event.detail.value
+  //     let optionsInput = null
+  //     if (event.detail.value == 'Dropdown') {
+  //       this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
+  //         optionsInput = rsp.rowEl[0].children[0].children[4]
+  //         optionsInput.pattern = '^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$'
+  //         optionsInput.disabled = false
+  //       })
+  //     } else {
+  //       this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
+  //         optionsInput = rsp.rowEl[0].children[0].children[4]
+  //         optionsInput.value = ''
+  //         optionsInput.disabled = true
+  //       })
+  //     }
+  //   }
+  // }
+
   addTable() {
     this.addTableTag.updateColumns()
     this.addTableTag.style.display = 'flex'
@@ -82,37 +114,36 @@ export class DataStoreSidebar {
   @Listen('body:update')
   updateListener(event: CustomEvent) {
     this.tableEvent.emit(event.detail)
-
-    return this.updateSidebar()
+    return this.updateSidebar(event.detail)
   }
 
   setCurrentSchema(tableName) {
     this.tableEvent.emit(tableName)
   }
 
-  highlightRow() {
-
+  highlightRow(tableName) {
     this.experienceTables.map((_, index) => {
       this.experienceRepeater.getItem(index).then((rsp) => {
-        console.log(rsp)
-        // let row = rsp.rowEl[0].parentElement.parentElement
-        // row.style.backgroundColor = 'white'
-        // if (tableName == 'experience-tables') {
-        //   if (clickRow == row) {
-        //     clickRow.style.backgroundColor = '#E1E1E1'
-        //   }
-        // }
+        let row = rsp.rowEl[0].parentElement.parentElement
+        row.style.backgroundColor = 'white'
+        if (tableName == rsp.data.name) {
+          row.style.backgroundColor = '#E1E1E1'
+        }
       })
     })
     this.studioTables.map((_, index) => {
       this.studioRepeater.getItem(index).then((rsp) => {
-        console.log(rsp)
+        let row = rsp.rowEl[0].parentElement.parentElement
+        row.style.backgroundColor = 'white'
+        if (tableName == rsp.data.name) {
+          row.style.backgroundColor = '#E1E1E1'
+        }
 
       })
     })
   }
 
-  updateSidebar() {
+  updateSidebar(tableName = null) {
     return fetch(this.url, {
       headers: new Headers({
         "Content-Type": "application/json"
@@ -131,13 +162,20 @@ export class DataStoreSidebar {
           }
         })
         if (this.initialLoad) {
-          this.initialLoad = false
+          // this.initialLoad = false
           if (this.experienceTables.length > 0) {
             this.setCurrentSchema(this.experienceTables[0].name)
             // this.highlightRow()
           } else if (this.studioTables.length > 0) {
             this.setCurrentSchema(this.studioTables[0].name)
           }
+        } else {
+          let self = this
+          setTimeout(function () {
+            console.log(tableName)
+            self.highlightRow(tableName)
+
+          }, 150)
         }
 
       }

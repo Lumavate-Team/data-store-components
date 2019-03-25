@@ -52,18 +52,40 @@ export class AddSchema {
     this.columns = [...this.columns]
   }
 
-  @Listen('onTextInput')
+  @Listen('onValueChange')
   handleInput(event) {
-    if(event.detail.lumaEl.id == 'input_add-schema-header'){
-      this.tableName = event.detail.value
-    }else{
-      this.columns[event.detail.lumaRowIndex][event.detail.input.el.getAttribute('row-key')] = event.detail.value
-      if (event.detail.input.el.getAttribute('row-key') == 'columnName') {
-        this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
-          let devNameInput = rsp.rowEl[0].children[0].children[3]
-          devNameInput.value = this.camelCase(event.detail.value)
-          this.columns[event.detail.lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
-        })
+    if (event.srcElement.tagName == 'DATA-STORE-ADD-SCHEMA') {
+      let inputElId = event.detail.inputElement.id
+      if (inputElId == 'input_add-schema-header') {
+        this.tableName = event.detail.value
+      } else {
+        let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
+        let rowKey = event.path[0].getAttribute('row-key')
+        this.columns[lumaRowIndex][rowKey] = event.detail.value
+        if (rowKey == 'columnName') {
+          this.repeater.getItem(lumaRowIndex).then((rsp) => {
+            let devNameInput = rsp.rowEl[0].children[0].children[3]
+            devNameInput.value = this.camelCase(event.detail.value)
+            this.columns[lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
+          })
+        }
+        if (rowKey == 'type') {
+          this.columns[lumaRowIndex][rowKey] = event.detail.value
+          let optionsInput = null
+          if (event.detail.value == 'Dropdown') {
+            this.repeater.getItem(lumaRowIndex).then((rsp) => {
+              optionsInput = rsp.rowEl[0].children[0].children[4]
+              optionsInput.pattern = '^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$'
+              optionsInput.disabled = false
+            })
+          } else {
+            this.repeater.getItem(lumaRowIndex).then((rsp) => {
+              optionsInput = rsp.rowEl[0].children[0].children[4]
+              optionsInput.value = ''
+              optionsInput.disabled = true
+            })
+          }
+        }
       }
     }
     //add update item call to repeater
@@ -71,20 +93,24 @@ export class AddSchema {
 
   @Listen('onChange')
   onChangeListener(event) {
-    this.columns[event.detail.lumaRowIndex][event.path[0].getAttribute('row-key')] = event.detail.value
-    let optionsInput = null
-    if (event.detail.value == 'Dropdown') {
-      this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
-        optionsInput = rsp.rowEl[0].children[0].children[4]
-        optionsInput.pattern = '^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$'
-        optionsInput.disabled = false
-      })
-    } else {
-      this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
-        optionsInput = rsp.rowEl[0].children[0].children[4]
-        optionsInput.value = ''
-        optionsInput.disabled = true
-      })
+    if (event.srcElement.tagName == 'DATA-STORE-ADD-SCHEMA') {
+      let lumaRowIndex = event.path[5].getAttribute('luma-row-index')
+      let rowKey = event.path[0].getAttribute('row-key')
+      this.columns[lumaRowIndex][rowKey] = event.detail.value
+      let optionsInput = null
+      if (event.detail.value == 'Dropdown') {
+        this.repeater.getItem(lumaRowIndex).then((rsp) => {
+          optionsInput = rsp.rowEl[0].children[0].children[4]
+          optionsInput.pattern = '^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$'
+          optionsInput.disabled = false
+        })
+      } else {
+        this.repeater.getItem(lumaRowIndex).then((rsp) => {
+          optionsInput = rsp.rowEl[0].children[0].children[4]
+          optionsInput.value = ''
+          optionsInput.disabled = true
+        })
+      }
     }
   }
 
