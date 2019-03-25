@@ -85,27 +85,6 @@ export class DataStoreSidebar {
     }
   }
 
-  // @Listen('onChange')
-  // onChangeListener(event) {
-  //   if(event.srcElement.tagName != 'DATA-STORE-ADD-SCHEMA'){
-  //     this.columns[event.detail.lumaRowIndex][event.path[0].getAttribute('row-key')] = event.detail.value
-  //     let optionsInput = null
-  //     if (event.detail.value == 'Dropdown') {
-  //       this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
-  //         optionsInput = rsp.rowEl[0].children[0].children[4]
-  //         optionsInput.pattern = '^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$'
-  //         optionsInput.disabled = false
-  //       })
-  //     } else {
-  //       this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
-  //         optionsInput = rsp.rowEl[0].children[0].children[4]
-  //         optionsInput.value = ''
-  //         optionsInput.disabled = true
-  //       })
-  //     }
-  //   }
-  // }
-
   addTable() {
     this.addTableTag.updateColumns()
     this.addTableTag.style.display = 'flex'

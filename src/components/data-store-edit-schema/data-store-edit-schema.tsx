@@ -21,7 +21,7 @@ export class EditSchema {
   selectMenu
   optionsInput
   @State() tableName
-  @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '' }]
+  @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '' , newColumn:true}]
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) addSchemaEvent: EventEmitter
 
   @Method()
@@ -35,15 +35,10 @@ export class EditSchema {
     this.tableName = tableName
     this.columns = columns
     this.repeater.setData(this.columns)
-    // console.log('1')
-    // setTimeout(()=>{
-    //   console.log('1')
-    //   this.repeater.setData(this.columns)
-    // },300)
   }
 
   addColumn() {
-    this.columns = [...this.columns, { columnName: '', 'type': '', 'devName': '', 'options': '' }]
+    this.columns = [...this.columns, { columnName: '', type: '', devName: '', options: '' , newColumn: true}]
     this.repeater.setData(this.columns)
   }
 
@@ -52,16 +47,7 @@ export class EditSchema {
 
   @Method()
   componentWillUpdate() {
-
     this.headerInput.shadowRoot.querySelector('#input_edit-schema-header').pattern = '^[a-zA-Z1-9-]+$'
-    // console.log(this.repeater)
-    // this.repeater.componentDidUpdate().then(()=>{
-    //   debugger
-    //   this.columns.forEach((_)=>{
-    //     // let row = this.repeater.getItem(index)
-
-    //   })
-    // })
   }
 
   deleteColumn(index) {
@@ -69,16 +55,46 @@ export class EditSchema {
     this.columns = [...this.columns]
   }
 
-  @Listen('onTextInput')
+  @Listen('onValueChange')
   handleInput(event) {
-    this.columns[event.detail.lumaRowIndex][event.detail.input.el.getAttribute('row-key')] = event.detail.value
-
-    // if(event.detail.input.el.getAttribute('row-key') == 'columnName'){
-    //   this.repeater.getItem(event.detail.lumaRowIndex).then((rsp)=>{
-    //     let devNameInput = rsp.rowEl[0].children[0].children[3]
-    //     devNameInput.value = this.camelCase(event.detail.value)
-    //   })
-    // }
+    console.log(this.columns)
+    if (event.srcElement.tagName == 'DATA-STORE-EDIT-SCHEMA') {
+      let inputElId = event.detail.inputElement.id
+      if (inputElId == 'input_add-schema-header') {
+        this.tableName = event.detail.value
+      } else {
+        let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
+        let rowKey = event.path[0].getAttribute('row-key')
+        this.columns[lumaRowIndex][rowKey] = event.detail.value
+        if (rowKey == 'columnName') {
+          let newColumn = this.columns[lumaRowIndex]['newColumn']
+          this.repeater.getItem(lumaRowIndex).then((rsp) => {
+            let devNameInput = rsp.rowEl[0].children[0].children[3]
+            if(newColumn){
+              devNameInput.value = this.camelCase(event.detail.value)
+              this.columns[lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
+            }
+          })
+        }
+        if (rowKey == 'type') {
+          this.columns[lumaRowIndex][rowKey] = event.detail.value
+          let optionsInput = null
+          if (event.detail.value == 'Dropdown') {
+            this.repeater.getItem(lumaRowIndex).then((rsp) => {
+              optionsInput = rsp.rowEl[0].children[0].children[4]
+              optionsInput.pattern = '^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$'
+              optionsInput.disabled = false
+            })
+          } else {
+            this.repeater.getItem(lumaRowIndex).then((rsp) => {
+              optionsInput = rsp.rowEl[0].children[0].children[4]
+              optionsInput.value = ''
+              optionsInput.disabled = true
+            })
+          }
+        }
+      }
+    }
     //add update item call to repeater
   }
 
@@ -103,27 +119,27 @@ export class EditSchema {
   }
   cancel() {
     this.el.style.display = 'none'
-    this.columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '' }]
+    this.columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '' ,newColumn:true}]
     this.tableName = ''
   }
 
-  @Listen('onChange')
-  onChangeListener(event) {
-    this.columns[event.detail.lumaRowIndex][event.path[0].getAttribute('row-key')] = event.detail.value
-    let optionsInput = null
-    if (event.detail.value == 'Dropdown') {
-      this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
-        optionsInput = rsp.rowEl[0].children[0].children[4]
-        optionsInput.disabled = false
-      })
-    } else {
-      this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
-        optionsInput = rsp.rowEl[0].children[0].children[4]
-        optionsInput.value = ''
-        optionsInput.disabled = true
-      })
-    }
-  }
+  // @Listen('onChange')
+  // onChangeListener(event) {
+  //   this.columns[event.detail.lumaRowIndex][event.path[0].getAttribute('row-key')] = event.detail.value
+  //   let optionsInput = null
+  //   if (event.detail.value == 'Dropdown') {
+  //     this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
+  //       optionsInput = rsp.rowEl[0].children[0].children[4]
+  //       optionsInput.disabled = false
+  //     })
+  //   } else {
+  //     this.repeater.getItem(event.detail.lumaRowIndex).then((rsp) => {
+  //       optionsInput = rsp.rowEl[0].children[0].children[4]
+  //       optionsInput.value = ''
+  //       optionsInput.disabled = true
+  //     })
+  //   }
+  // }
 
   @Listen('onRowPress')
   onRowPress(event) {
