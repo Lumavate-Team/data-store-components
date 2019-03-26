@@ -11,13 +11,14 @@ export class DataStoreTable {
 
   @Prop() temp: string
   url = 'http://localhost:5005/ic/data-store/'
-  header = { 'columnName': 'Column', 'type': 'Type','devName': 'Dev Name' ,'options': 'Options', 'Header': true }
+  header = { 'columnName': 'Column', 'type': 'Type', 'devName': 'Dev Name', 'options': 'Options', 'Header': true }
   @State() tableData = []
   editTableTag
   deleteTableTag
   fileUtilTag
   tableName
   tableId
+
   getAuthToken() {
     var cookies = document.cookie.split(";");
     for (var i = 0, len = cookies.length; i < len; i++) {
@@ -42,33 +43,37 @@ export class DataStoreTable {
   @Listen('body:table')
   getTableHandler(event: CustomEvent) {
     this.tableName = event.detail
-    // debugger
-    return fetch(this.url + event.detail + '/schema', {
-      headers: new Headers({
-        "Content-Type": "application/json"
+    return this.getSingleUseToken().then((singleUseToken: string) => {
+      let reqHeaders = new Headers({
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + this.getAuthToken(),
+        "Luma-Proxy-Authorization": singleUseToken
       })
-    }).then(rsp => {
-      return rsp.json()
-    }).then(data => {
-      this.tableId = data.payload.data.type_id
-      this.tableData = data.payload.data.columns
-    }).catch((err) => {
-      console.error('Could not load data', err);
+      fetch(this.url + event.detail + '/schema', {
+        headers: reqHeaders
+      }).then(rsp => {
+        return rsp.json()
+      }).then(data => {
+        this.tableId = data.payload.data.type_id
+        this.tableData = data.payload.data.columns
+      }).catch((err) => {
+        console.error('Could not load data', err);
+      })
     })
   };
 
-  openFileUtilModal(){
+  openFileUtilModal() {
     console.log(this.fileUtilTag)
     this.fileUtilTag.openFileUtil(this.tableName, this.url)
     this.fileUtilTag.style.display = 'flex'
   }
 
-  editSchema(){
-    this.editTableTag.updateColumns(this.tableName,this.tableData)
+  editSchema() {
+    this.editTableTag.updateColumns(this.tableName, this.tableData)
     this.editTableTag.style.display = 'flex'
   }
 
-  deleteTable(){
+  deleteTable() {
     this.deleteTableTag.getTableInfo(this.tableId, this.tableName)
     this.deleteTableTag.style.display = 'flex'
   }
@@ -91,7 +96,7 @@ export class DataStoreTable {
               <div id='nested-row'>
                 <i class='material-icons' id='edit' onClick={() => this.editSchema()}>edit</i>
                 <i class='material-icons' id='delete' onClick={() => this.deleteTable()}>delete</i>
-                <luma-button id='import-export' text='Export/Import'	primary-color='#244862' onClick={() => this.openFileUtilModal()}></luma-button>
+                <luma-button id='import-export' text='Export/Import' primary-color='#244862' onClick={() => this.openFileUtilModal()}></luma-button>
               </div>
             </div>
           </div>

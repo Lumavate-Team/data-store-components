@@ -24,24 +24,50 @@ export class FileUtil {
     this.apiUrl = apiUrl
   }
 
+  getAuthToken() {
+    var cookies = document.cookie.split(";");
+    for (var i = 0, len = cookies.length; i < len; i++) {
+      var cookie = cookies[i].split("=");
+      if (cookie[0].trim() == "pwa_jwt") {
+        return cookie[1].trim();
+      }
+    }
+  }
+
+  getSingleUseToken() {
+    return new Promise((resolve, reject) => {
+      try {
+        window['getSingleUseToken'](resolve, reject, reject);
+      }
+      catch (err) {
+        reject('Error getting single use token');
+      }
+    });
+  }
+
   getCSV() {
-    return fetch(this.apiUrl + this.tableName + '/batch', {
-      headers: new Headers({
-        "Content-Type": "application/json"
+    return this.getSingleUseToken().then((singleUseToken: string) => {
+      let reqHeaders = new Headers({
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + this.getAuthToken(),
+        "Luma-Proxy-Authorization": singleUseToken
       })
-    }).then(rsp => {
-      return rsp.blob()
-    }).then(blob => {
-      var url = window.URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = this.tableName + ".csv";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      this.initNotification(this.tableName + ' records downloaded')
-    }).catch((err) => {
-      console.error('Could not download data', err);
+      fetch(this.apiUrl + this.tableName + '/batch', {
+        headers: reqHeaders
+      }).then(rsp => {
+        return rsp.blob()
+      }).then(blob => {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = this.tableName + ".csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        this.initNotification(this.tableName + ' records downloaded')
+      }).catch((err) => {
+        console.error('Could not download data', err);
+      })
     })
   }
 
@@ -52,19 +78,23 @@ export class FileUtil {
     }
 
     if (data) {
-      let reqHeaders = new Headers({
-        "Content-Type": "application/json",
-      })
-      fetch(this.apiUrl + this.tableName + '/batch', {
-        headers: reqHeaders,
-        method: 'post',
-        body: data
-      }).then(rsp => {
-        return rsp.json()
-      }).then(data => {
-        this.initNotification(data.payload.data, true)
-      }).catch((err) => {
-        console.error('Could not load data', err);
+      this.getSingleUseToken().then((singleUseToken: string) => {
+        let reqHeaders = new Headers({
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.getAuthToken(),
+          "Luma-Proxy-Authorization": singleUseToken
+        })
+        fetch(this.apiUrl + this.tableName + '/batch', {
+          headers: reqHeaders,
+          method: 'post',
+          body: data
+        }).then(rsp => {
+          return rsp.json()
+        }).then(data => {
+          this.initNotification(data.payload.data, true)
+        }).catch((err) => {
+          console.error('Could not load data', err);
+        })
       })
     }
   }
@@ -96,7 +126,7 @@ export class FileUtil {
       <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
         <luma-input-text id="file-util-table" readonly="true" input-style="filled" value={this.tableName} primary-color="#244862" ref={(el) => this.headerInput = el as HTMLElement}></luma-input-text>
         <div id="container">
-        <div class='close-row'>
+          <div class='close-row'>
             <i class="material-icons" onClick={() => this.cancel()} >close</i>
           </div>
           <div class='title-row'>

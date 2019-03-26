@@ -21,7 +21,7 @@ export class EditSchema {
   selectMenu
   optionsInput
   @State() tableName
-  @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '' , newColumn:true}]
+  @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', newColumn: true }]
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) addSchemaEvent: EventEmitter
 
   @Method()
@@ -38,7 +38,7 @@ export class EditSchema {
   }
 
   addColumn() {
-    this.columns = [...this.columns, { columnName: '', type: '', devName: '', options: '' , newColumn: true}]
+    this.columns = [...this.columns, { columnName: '', type: '', devName: '', options: '', newColumn: true }]
     this.repeater.setData(this.columns)
   }
 
@@ -70,7 +70,7 @@ export class EditSchema {
           let newColumn = this.columns[lumaRowIndex]['newColumn']
           this.repeater.getItem(lumaRowIndex).then((rsp) => {
             let devNameInput = rsp.rowEl[0].children[0].children[3]
-            if(newColumn){
+            if (newColumn) {
               devNameInput.value = this.camelCase(event.detail.value)
               this.columns[lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
             }
@@ -119,7 +119,7 @@ export class EditSchema {
   }
   cancel() {
     this.el.style.display = 'none'
-    this.columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '' ,newColumn:true}]
+    this.columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', newColumn: true }]
     this.tableName = ''
   }
 
@@ -146,22 +146,48 @@ export class EditSchema {
     console.log(event)
   }
 
-  saveTable() {
-    let reqHeaders = new Headers({
-      "Content-Type": "application/json",
-    })
 
-    return fetch('http://localhost:5005/ic/hjgkjhg/' + this.tableName + '/schema', {
-      headers: reqHeaders,
-      method: 'put',
-      body: JSON.stringify(this.columns)
-    }).then(rsp => {
-      return rsp.json()
-    }).then(() => {
-      this.addSchemaEvent.emit(this.tableName)
-      this.cancel()
-    }).catch((err) => {
-      console.error('Failed to add schema to table', err);
+  getSingleUseToken() {
+    return new Promise((resolve, reject) => {
+      try {
+        window['getSingleUseToken'](resolve, reject, reject);
+      }
+      catch (err) {
+        reject('Error getting single use token');
+      }
+    });
+  }
+
+  getAuthToken() {
+    var cookies = document.cookie.split(";");
+    for (var i = 0, len = cookies.length; i < len; i++) {
+      var cookie = cookies[i].split("=");
+      if (cookie[0].trim() == "pwa_jwt") {
+        return cookie[1].trim();
+      }
+    }
+  }
+
+
+  saveTable() {
+    return this.getSingleUseToken().then((singleUseToken: string) => {
+      let reqHeaders = new Headers({
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + this.getAuthToken(),
+        "Luma-Proxy-Authorization": singleUseToken
+      })
+      fetch('http://localhost:5005/ic/hjgkjhg/' + this.tableName + '/schema', {
+        headers: reqHeaders,
+        method: 'put',
+        body: JSON.stringify(this.columns)
+      }).then(rsp => {
+        return rsp.json()
+      }).then(() => {
+        this.addSchemaEvent.emit(this.tableName)
+        this.cancel()
+      }).catch((err) => {
+        console.error('Failed to add schema to table', err);
+      })
     })
   }
 

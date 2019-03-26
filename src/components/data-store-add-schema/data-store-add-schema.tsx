@@ -138,12 +138,38 @@ export class AddSchema {
     this.tableName = ''
   }
 
-  createTable() {
-    let reqHeaders = new Headers({
-      "Content-Type": "application/json",
-    })
+  getSingleUseToken() {
+    return new Promise((resolve, reject) => {
+      try {
+        window['getSingleUseToken'](resolve, reject, reject);
+      }
+      catch (err) {
+        reject('Error getting single use token');
+      }
+    });
+  }
 
-    return fetch('http://localhost:5005/ic/hjgkjhg/' + this.tableName + '/schema', {
+  getAuthToken() {
+    var cookies = document.cookie.split(";");
+    for (var i = 0, len = cookies.length; i < len; i++) {
+      var cookie = cookies[i].split("=");
+      if (cookie[0].trim() == "pwa_jwt") {
+        return cookie[1].trim();
+      }
+    }
+  }
+
+
+
+  createTable() {
+    return this.getSingleUseToken().then((singleUseToken: string) => {
+      let reqHeaders = new Headers({
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + this.getAuthToken(),
+        "Luma-Proxy-Authorization": singleUseToken
+      })
+
+    fetch('http://localhost:5005/ic/hjgkjhg/' + this.tableName + '/schema', {
       headers: reqHeaders,
       method: 'post',
       body: JSON.stringify(this.columns)
@@ -155,6 +181,7 @@ export class AddSchema {
       this.cancel()
     }).catch((err) => {
       console.error('Failed to add schema to table', err);
+    })
     })
   }
 

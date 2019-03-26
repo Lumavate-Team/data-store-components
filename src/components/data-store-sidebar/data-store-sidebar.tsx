@@ -32,6 +32,7 @@ export class DataStoreSidebar {
   componentDidLoad() {
     let self = this
     setTimeout(function () {
+      console.log('inSetTimeout')
       self.studioRepeater.setData(self.studioTables)
       self.experienceRepeater.setData(self.experienceTables)
       setTimeout(function () {
@@ -43,8 +44,8 @@ export class DataStoreSidebar {
             self.highlightRow(self.studioTables[0].name)
           }
         }
-      }, 150)
-    }, 200)
+      }, 200)
+    }, 300)
   }
 
   @Listen('onRowPress')
@@ -116,43 +117,75 @@ export class DataStoreSidebar {
     })
   }
 
-  updateSidebar(tableName = null) {
-    return fetch(this.url, {
-      headers: new Headers({
-        "Content-Type": "application/json"
-      })
-    }).then(rsp => {
-      return rsp.json()
-    }).then(data => {
-      if (data && data.payload && data.payload.data.length > 0) {
-        this.experienceTables = []
-        this.studioTables = []
-        data.payload.data.forEach((table) => {
-          if (table.scope == 'experience') {
-            this.experienceTables.push(table)
-          } else {
-            this.studioTables.push(table)
-          }
-        })
-        if (this.initialLoad) {
-          // this.initialLoad = false
-          if (this.experienceTables.length > 0) {
-            this.setCurrentSchema(this.experienceTables[0].name)
-            // this.highlightRow()
-          } else if (this.studioTables.length > 0) {
-            this.setCurrentSchema(this.studioTables[0].name)
-          }
-        } else {
-          let self = this
-          setTimeout(function () {
-            self.highlightRow(tableName)
 
-          }, 150)
-        }
-
+  getSingleUseToken() {
+    return new Promise((resolve, reject) => {
+      try {
+        window['getSingleUseToken'](resolve, reject, reject);
       }
-    }).catch((err) => {
-      console.error('Could not load data', err);
+      catch (err) {
+        reject('Error getting single use token');
+      }
+    });
+  }
+
+  getAuthToken() {
+    var cookies = document.cookie.split(";");
+    for (var i = 0, len = cookies.length; i < len; i++) {
+      var cookie = cookies[i].split("=");
+      if (cookie[0].trim() == "pwa_jwt") {
+        return cookie[1].trim();
+      }
+    }
+  }
+
+
+
+  updateSidebar(tableName = null) {
+    return this.getSingleUseToken().then((singleUseToken: string) => {
+        let reqHeaders = new Headers({
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + this.getAuthToken(),
+          "Luma-Proxy-Authorization": singleUseToken
+        })
+
+
+      fetch(this.url, {
+        headers: reqHeaders
+      }).then(rsp => {
+        return rsp.json()
+      }).then(data => {
+        if (data && data.payload && data.payload.data.length > 0) {
+          this.experienceTables = []
+          this.studioTables = []
+
+          data.payload.data.forEach((table) => {
+            if (table.scope == 'experience') {
+              this.experienceTables.push(table)
+            } else {
+              this.studioTables.push(table)
+            }
+          })
+          if (this.initialLoad) {
+            // this.initialLoad = false
+            if (this.experienceTables.length > 0) {
+              this.setCurrentSchema(this.experienceTables[0].name)
+              // this.highlightRow()
+            } else if (this.studioTables.length > 0) {
+              this.setCurrentSchema(this.studioTables[0].name)
+            }
+          } else {
+            let self = this
+            setTimeout(function () {
+              self.highlightRow(tableName)
+
+            }, 150)
+          }
+
+        }
+      }).catch((err) => {
+        console.error('Could not load data', err);
+      })
     })
   }
 
