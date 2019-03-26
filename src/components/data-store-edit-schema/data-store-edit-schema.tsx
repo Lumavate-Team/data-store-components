@@ -20,6 +20,7 @@ export class EditSchema {
   addbtn
   selectMenu
   optionsInput
+  url = '/ic/data-store-admin-ui/'
   @State() tableName
   @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', newColumn: true }]
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) addSchemaEvent: EventEmitter
@@ -163,7 +164,7 @@ export class EditSchema {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + this.getAuthToken()
       })
-      fetch('http://localhost:5005/ic/hjgkjhg/' + this.tableName + '/schema', {
+      fetch(this.url + this.tableName + '/schema', {
         headers: reqHeaders,
         method: 'put',
         body: JSON.stringify(this.columns)

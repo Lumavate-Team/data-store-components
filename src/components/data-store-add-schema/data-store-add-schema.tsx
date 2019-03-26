@@ -12,7 +12,7 @@ export class AddSchema {
 
   @Prop() header: boolean = false
   @Prop({ mutable: true }) schema
-
+  url = '/ic/data-store-admin-ui/'
   @Element() el: HTMLElement
   parent
   repeater
@@ -156,7 +156,7 @@ export class AddSchema {
         "Authorization": "Bearer " + this.getAuthToken()
       })
 
-    fetch('http://localhost:5005/ic/hjgkjhg/' + this.tableName + '/schema', {
+    fetch(this.url + this.tableName + '/schema', {
       headers: reqHeaders,
       method: 'post',
       body: JSON.stringify(this.columns)

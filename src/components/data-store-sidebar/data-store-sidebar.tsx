@@ -9,7 +9,7 @@ import { Component, Prop, Listen, Event, EventEmitter, State } from '@stencil/co
 export class DataStoreSidebar {
 
   @Prop() temp: string
-  url = host()+ '/ic/data-store/type'
+  url ='/ic/data-store-admin-ui/type'
   @State() experienceTables = []
   @State() studioTables = []
   addTableTag
@@ -151,7 +151,6 @@ updateSidebar() {
       "Content-Type": "application/json",
       "Authorization": "Bearer " + this.getAuthToken()
     })
-    console.log('Bearer ' + this.getAuthToken())
 
     return fetch(this.url, {
       headers: reqHeaders

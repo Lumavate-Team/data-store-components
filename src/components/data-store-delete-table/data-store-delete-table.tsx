@@ -12,7 +12,7 @@ export class DeleteTable {
 
   @Prop() header: boolean = false
   @Prop({ mutable: true }) schema
-
+  url = '/ic/data-store-admin-ui/type/'
   @Element() el: HTMLElement
   parent
   @State() tableName
@@ -34,7 +34,7 @@ export class DeleteTable {
       "Content-Type": "application/json"
     })
 
-      return fetch('http://localhost:5005/ic/hjgkjhg/type/'+this.tableId, {
+      return fetch(this.url +this.tableId, {
         headers: reqHeaders,
         method: 'delete'
       }).then(rsp => {
