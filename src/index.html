@@ -14,6 +14,23 @@
   <link href="/build/data-store.css" rel="stylesheet">
   <script src="/build/data-store.js"></script>
 
+  <script>
+    let authData = {
+      'namespace': 'abcd',
+      'session': 'abc123',
+      'code': 'activation-code',
+      'org_id': 1,
+      'version': 'production',
+      'home_url': '',
+      'auth_url': ''
+    };
+    testToken = 'frontpart.' + btoa(JSON.stringify(authData)) + '.backpart';
+    document.cookie = 'pwa_jwt=' + testToken + ';'
+
+    function getSingleUseToken(onSuccess, onNoAuth, onError) {
+      onSuccess('12345');
+    }
+  </script>
   <style>
     html{
       overflow: hidden;
