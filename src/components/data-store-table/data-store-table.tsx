@@ -29,25 +29,12 @@ export class DataStoreTable {
     }
   }
 
-  getSingleUseToken() {
-    return new Promise((resolve, reject) => {
-      try {
-        window['getSingleUseToken'](resolve, reject, reject);
-      }
-      catch (err) {
-        reject('Error getting single use token');
-      }
-    });
-  }
-
   @Listen('body:table')
   getTableHandler(event: CustomEvent) {
     this.tableName = event.detail
-    return this.getSingleUseToken().then((singleUseToken: string) => {
       let reqHeaders = new Headers({
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + this.getAuthToken(),
-        "Luma-Proxy-Authorization": singleUseToken
+        "Authorization": "Bearer " + this.getAuthToken()
       })
       fetch(this.url + event.detail + '/schema', {
         headers: reqHeaders
@@ -59,7 +46,6 @@ export class DataStoreTable {
       }).catch((err) => {
         console.error('Could not load data', err);
       })
-    })
   };
 
   openFileUtilModal() {

@@ -9,7 +9,7 @@ import { Component, Prop, Listen, Event, EventEmitter, State } from '@stencil/co
 export class DataStoreSidebar {
 
   @Prop() temp: string
-  url = 'http://localhost:5005/ic/data-store/type'
+  url = host()+ '/ic/data-store/type'
   @State() experienceTables = []
   @State() studioTables = []
   addTableTag
@@ -134,18 +134,6 @@ highlightRow(tableName) {
 
 }
 
-
-getSingleUseToken() {
-  return new Promise((resolve, reject) => {
-    try {
-      window['getSingleUseToken'](resolve, reject, reject);
-    }
-    catch (err) {
-      reject('Error getting single use token');
-    }
-  });
-}
-
 getAuthToken() {
   var cookies = document.cookie.split(";");
   for (var i = 0, len = cookies.length; i < len; i++) {
@@ -159,14 +147,12 @@ getAuthToken() {
 
 
 updateSidebar() {
-  return this.getSingleUseToken().then((singleUseToken: string) => {
     let reqHeaders = new Headers({
       "Content-Type": "application/json",
-      "Authorization": "Bearer " + this.getAuthToken(),
-      "Luma-Proxy-Authorization": singleUseToken
+      "Authorization": "Bearer " + this.getAuthToken()
     })
     console.log('Bearer ' + this.getAuthToken())
-    console.log(singleUseToken)
+
     return fetch(this.url, {
       headers: reqHeaders
     }).then(rsp => {
@@ -175,8 +161,7 @@ updateSidebar() {
       if (data && data.payload && data.payload.data.length > 0) {
         this.experienceTables = []
         this.studioTables = []
-        // console.log('Data retrieved')
-        // console.log(data.payload.data)
+
         data.payload.data.forEach((table) => {
           if (table.scope == 'experience') {
             this.experienceTables.push(table)
@@ -201,7 +186,6 @@ updateSidebar() {
     }).catch((err) => {
       console.error('Could not load data', err);
     })
-  })
 }
 
 render() {

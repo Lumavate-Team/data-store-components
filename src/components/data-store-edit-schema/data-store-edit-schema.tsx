@@ -147,17 +147,6 @@ export class EditSchema {
   }
 
 
-  getSingleUseToken() {
-    return new Promise((resolve, reject) => {
-      try {
-        window['getSingleUseToken'](resolve, reject, reject);
-      }
-      catch (err) {
-        reject('Error getting single use token');
-      }
-    });
-  }
-
   getAuthToken() {
     var cookies = document.cookie.split(";");
     for (var i = 0, len = cookies.length; i < len; i++) {
@@ -170,11 +159,9 @@ export class EditSchema {
 
 
   saveTable() {
-    return this.getSingleUseToken().then((singleUseToken: string) => {
       let reqHeaders = new Headers({
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + this.getAuthToken(),
-        "Luma-Proxy-Authorization": singleUseToken
+        "Authorization": "Bearer " + this.getAuthToken()
       })
       fetch('http://localhost:5005/ic/hjgkjhg/' + this.tableName + '/schema', {
         headers: reqHeaders,
@@ -188,7 +175,6 @@ export class EditSchema {
       }).catch((err) => {
         console.error('Failed to add schema to table', err);
       })
-    })
   }
 
 

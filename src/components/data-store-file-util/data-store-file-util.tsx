@@ -34,23 +34,10 @@ export class FileUtil {
     }
   }
 
-  getSingleUseToken() {
-    return new Promise((resolve, reject) => {
-      try {
-        window['getSingleUseToken'](resolve, reject, reject);
-      }
-      catch (err) {
-        reject('Error getting single use token');
-      }
-    });
-  }
-
   getCSV() {
-    return this.getSingleUseToken().then((singleUseToken: string) => {
       let reqHeaders = new Headers({
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + this.getAuthToken(),
-        "Luma-Proxy-Authorization": singleUseToken
+        "Authorization": "Bearer " + this.getAuthToken()
       })
       fetch(this.apiUrl + this.tableName + '/batch', {
         headers: reqHeaders
@@ -68,7 +55,6 @@ export class FileUtil {
       }).catch((err) => {
         console.error('Could not download data', err);
       })
-    })
   }
 
   uploadCSV(event) {
@@ -78,11 +64,9 @@ export class FileUtil {
     }
 
     if (data) {
-      this.getSingleUseToken().then((singleUseToken: string) => {
         let reqHeaders = new Headers({
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + this.getAuthToken(),
-          "Luma-Proxy-Authorization": singleUseToken
+          "Authorization": "Bearer " + this.getAuthToken()
         })
         fetch(this.apiUrl + this.tableName + '/batch', {
           headers: reqHeaders,
@@ -95,7 +79,6 @@ export class FileUtil {
         }).catch((err) => {
           console.error('Could not load data', err);
         })
-      })
     }
   }
 
