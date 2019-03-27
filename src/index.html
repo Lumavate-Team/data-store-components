@@ -22,7 +22,8 @@
       'org_id': 1,
       'version': 'production',
       'home_url': '',
-      'auth_url': ''
+      'auth_url': '',
+      'scope': 'ms-manage'
     };
     testToken = 'frontpart.' + btoa(JSON.stringify(authData)) + '.backpart';
     document.cookie = 'pwa_jwt=' + testToken + ';'
