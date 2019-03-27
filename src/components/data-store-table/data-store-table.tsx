@@ -10,7 +10,7 @@ import { Component, Prop, Listen, State } from '@stencil/core';
 export class DataStoreTable {
 
   @Prop() temp: string
-  url = '/ic/data-store-admin-ui/'
+  url = '/ic/data-store-admin-ui/manage/'
   header = { 'columnName': 'Column', 'type': 'Type', 'devName': 'Dev Name', 'options': 'Options', 'Header': true }
   @State() tableData = []
   editTableTag

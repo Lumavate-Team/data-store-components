@@ -15,7 +15,7 @@ export class FileUtil {
   cancelbtn
   headerInput
   uploadInput
-  apiUrl
+  apiUrl = '/ic/data-store-admin-ui/manage/'
   @State() tableName
 
   @Method()
