@@ -10,6 +10,7 @@ export class DataStoreToast {
 
     @Prop() line1: string = ''
     @Prop() line2: string = ''
+    @Prop() line3: string = ''
 
     @Element() el: HTMLElement
     toast: HTMLElement
@@ -29,6 +30,7 @@ export class DataStoreToast {
                 <div id="toast" ref={(el) => this.toast = el as HTMLElement}>
                     {this.line1}<br/>
                     {this.line2}<br/>
+                    {this.line3}<br/>
                 </div>
             )
         } else {

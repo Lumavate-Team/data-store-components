@@ -1,5 +1,5 @@
 
-import { Component, Prop, Event, EventEmitter} from '@stencil/core';
+import { Component, Prop, Event, EventEmitter, Listen, Element } from '@stencil/core';
 
 @Component({
   tag: 'data-store-sidebar-item',
@@ -8,35 +8,42 @@ import { Component, Prop, Event, EventEmitter} from '@stencil/core';
 })
 export class DataStoreSidebarItem {
 
-  @Prop() header: string
-  @Prop() tables = []
+  @Prop() tableName
+  @Prop() records
+
   currentTable = null
+  tableItem: HTMLElement
+  @Element() el: HTMLElement
 
-  el!: HTMLElement
-  headerEl!: HTMLElement
+  @Event({ eventName: 'table', composed: true, bubbles: true, cancelable: false }) tableEvent: EventEmitter
+  @Event({ eventName: 'highlight', composed: true, bubbles: true, cancelable: false }) highlightEvent: EventEmitter
 
-  @Event({eventName:'table',composed:true, bubbles:true, cancelable:false})tableEvent: EventEmitter
-
-  tableDataHandler(tableRef){
-    
+  tableDataHandler(tableRef) {
+    this.highlight(tableRef)
     this.tableEvent.emit(tableRef)
+  }
+
+  @Listen('body:highlight')
+  highlightListener(event) {
+    this.highlight(event.detail)
+  }
+
+  highlight(tableName) {
+    // debugger
+    if (tableName != this.tableName) {
+      this.tableItem.style.backgroundColor = 'rgb(255, 255, 255)'
+    } else if (this.tableItem.style.backgroundColor != 'rgba(0, 0, 0, 0.3)') {
+      this.tableItem.style.backgroundColor = 'rgba(0, 0, 0, 0.3)'
+      this.highlightEvent.emit(tableName)
+    }
   }
 
   render() {
     return (
-      <div id='parent' ref={(el) => this.el = el as HTMLElement}>
-        <div class='header' ref={(el) => this.headerEl = el as HTMLElement}>
-          {this.header}
-        </div>
-        <div class='table'>
-          {this.tables.map((table) =>
-            <div class='table-item' onClick={() => this.tableDataHandler(table.name)}>
-              <div class='table-name'>
-              {table.name}</div>
-              <div class='records'>{table.records} records</div>
-            </div>
-          )}
-        </div>
+      <div class='table-item' onClick={() => this.tableDataHandler(this.tableName)} ref={(el) => this.tableItem = el as HTMLElement} >
+        <div class='table-name'>
+          {this.tableName}</div>
+        <div class='records'>{this.records} records</div>
       </div>
     )
   }

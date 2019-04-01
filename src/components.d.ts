@@ -15,7 +15,7 @@ export namespace Components {
   interface DataStoreAddSchema {
     'header': boolean;
     'schema': any;
-    'updateColumns': (tableName?: string, columns?: { 'columnName': string; 'type': string; 'devName': string; 'options': string; }[]) => void;
+    'updateColumns': (tableName?: string, columns?: { 'columnName': string; 'type': string; 'devName': string; 'options': string; 'active': boolean; }[]) => void;
   }
   interface DataStoreAddSchemaAttributes extends StencilHTMLAttributes {
     'header'?: boolean;
@@ -30,7 +30,7 @@ export namespace Components {
   }
   interface DataStoreDeleteTableAttributes extends StencilHTMLAttributes {
     'header'?: boolean;
-    'onAddSchema'?: (event: CustomEvent) => void;
+    'onDelete'?: (event: CustomEvent) => void;
     'schema'?: any;
   }
 
@@ -53,23 +53,26 @@ export namespace Components {
   }
   interface DataStoreFileUtilAttributes extends StencilHTMLAttributes {
     'header'?: boolean;
+    'onUpdate'?: (event: CustomEvent) => void;
     'schema'?: any;
   }
 
   interface DataStoreSidebarItem {
-    'header': string;
-    'tables': any;
+    'records': any;
+    'tableName': any;
   }
   interface DataStoreSidebarItemAttributes extends StencilHTMLAttributes {
-    'header'?: string;
+    'onHighlight'?: (event: CustomEvent) => void;
     'onTable'?: (event: CustomEvent) => void;
-    'tables'?: any;
+    'records'?: any;
+    'tableName'?: any;
   }
 
   interface DataStoreSidebar {
     'temp': string;
   }
   interface DataStoreSidebarAttributes extends StencilHTMLAttributes {
+    'onHighlight'?: (event: CustomEvent) => void;
     'onTable'?: (event: CustomEvent) => void;
     'temp'?: string;
   }
@@ -93,10 +96,12 @@ export namespace Components {
   interface DataStoreToast {
     'line1': string;
     'line2': string;
+    'line3': string;
   }
   interface DataStoreToastAttributes extends StencilHTMLAttributes {
     'line1'?: string;
     'line2'?: string;
+    'line3'?: string;
   }
 }
 

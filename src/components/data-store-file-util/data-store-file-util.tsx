@@ -1,5 +1,5 @@
 
-import { Component, Prop, State, Element, Method } from "@stencil/core";
+import { Component, Prop, State, Element, Method, Event, EventEmitter } from "@stencil/core";
 
 @Component({
   tag: 'data-store-file-util',
@@ -17,6 +17,9 @@ export class FileUtil {
   uploadInput
   apiUrl = '/ic/data-store-admin-ui/manage/'
   @State() tableName
+
+  @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) importEvent: EventEmitter
+
 
   @Method()
   openFileUtil(tableName, apiUrl) {
@@ -76,6 +79,7 @@ export class FileUtil {
           return rsp.json()
         }).then(data => {
           this.initNotification(data.payload.data, true)
+          this.importEvent.emit(this.tableName)
         }).catch((err) => {
           console.error('Could not load data', err);
         })
@@ -96,6 +100,7 @@ export class FileUtil {
     if (upload) {
       toast.line1 = 'Records added: ' + text.recordsAdded
       toast.line2 = "Records modified: " + text.recordsModified
+      toast.line3 = 'Records Deleted: ' + text.recordsDeleted
     } else {
       toast.line1 = text
     }

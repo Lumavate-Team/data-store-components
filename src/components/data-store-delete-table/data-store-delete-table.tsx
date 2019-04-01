@@ -17,7 +17,12 @@ export class DeleteTable {
   parent
   @State() tableName
   tableId
-  @Event({ eventName: 'addSchema', composed: true, bubbles: true, cancelable: false }) addSchemaEvent: EventEmitter
+  body
+  @Event({ eventName: 'delete', composed: true, bubbles: true, cancelable: false }) deleteSchemaEvent: EventEmitter
+
+  componentWillLoad(){
+    this.body = document.querySelector('body')
+  }
 
   @Method()
   getTableInfo(tableId, tableName) {
@@ -38,12 +43,24 @@ export class DeleteTable {
         headers: reqHeaders,
         method: 'delete'
       }).then(rsp => {
-        return rsp.json()
-      }).then(() => {
-        this.cancel()
+        return rsp
+      }).then((r) => {
+        if(r.status == 400){
+          this.initNotification()
+          this.cancel()
+        }else{
+          this.deleteSchemaEvent.emit()
+          this.cancel()
+        }
       }).catch((err) => {
         console.error('Failed to delete table', err);
       })
+  }
+
+  initNotification() {
+    let toast = document.createElement('data-store-toast')
+    toast.line1 = 'Cannot delete type with data linked to it'
+    this.body.appendChild(toast)
   }
 
   render() {

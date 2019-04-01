@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "stencil build --docs",
+    "dev-build": "stencil build --dev --docs",
     "postbuild": "./postbuild.sh",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
