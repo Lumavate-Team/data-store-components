@@ -29,14 +29,17 @@ export class DataStoreTable {
     }
   }
 
+
+
   @Listen('body:table')
   getTableHandler(event: CustomEvent) {
     this.tableName = event.detail
+    if (this.tableName != null) {
       let reqHeaders = new Headers({
         "Content-Type": "application/json",
         "Authorization": "Bearer " + this.getAuthToken()
       })
-      fetch(this.url + event.detail + '/schema', {
+      return fetch(this.url + event.detail + '/schema', {
         headers: reqHeaders
       }).then(rsp => {
         return rsp.json()
@@ -46,7 +49,11 @@ export class DataStoreTable {
       }).catch((err) => {
         console.error('Could not load data', err);
       })
-  };
+    } else{
+      this.tableName = ''
+      this.tableData = []
+    }
+  }
 
   openFileUtilModal() {
     console.log(this.fileUtilTag)

@@ -14,23 +14,13 @@ export class DataStoreSidebar {
   @State() studioTables = []
   addTableTag
   initialLoad = true
-  test = [1,2,3,4,5,6,7,8]
+  test = [1, 2, 3, 4, 5, 6, 7, 8]
 
   @Event({ eventName: 'table', composed: true, bubbles: true, cancelable: false }) tableEvent: EventEmitter
   @Event({ eventName: 'highlight', composed: true, bubbles: true, cancelable: false }) highlightEvent: EventEmitter
 
   componentWillLoad() {
-    // console.log('sidebar willLoad')
     this.updateSidebar()
-  }
-
-  componentWillUpdate() {
-    // console.log('sidebar willUpate')
-  }
-
-
-  componentDidLoad() {
-    // console.log('sidebar didLoad')
   }
 
 
@@ -47,21 +37,28 @@ export class DataStoreSidebar {
 
   @Listen('body:delete')
   deleteListener() {
-    let highlightTable = null
-    if (this.experienceTables.length > 0){
-      highlightTable = this.experienceTables[0].name
-      this.tableEvent.emit(highlightTable)
-    }else if(this.studioTables.length > 0){
-      highlightTable = this.studioTables[0].name
-      this.tableEvent.emit(highlightTable)
-    }
-    return this.updateSidebar(highlightTable)
+    this.updateSidebar().then(() => {
+      let highlightTable = null
+      // debugger
+      if (this.experienceTables.length > 0) {
+        highlightTable = this.experienceTables[0].name
+        this.tableEvent.emit(highlightTable)
+        this.updateSidebar(highlightTable)
+      } else if (this.studioTables.length > 0) {
+        highlightTable = this.studioTables[0].name
+        this.tableEvent.emit(highlightTable)
+        this.updateSidebar(highlightTable)
+      } else{
+        debugger
+        this.tableEvent.emit(null)
+      }
+    })
   }
 
   setCurrentSchema(tableName) {
     this.tableEvent.emit(tableName)
 
-    setTimeout(()=>{
+    setTimeout(() => {
       //need timeout due to lifecycle bug
       this.highlightEvent.emit(tableName)
     }, 50)
@@ -90,31 +87,28 @@ export class DataStoreSidebar {
     }).then(rsp => {
       return rsp.json()
     }).then(data => {
-      if (data && data.payload && data.payload.data.length > 0) {
-        this.experienceTables = []
-        this.studioTables = []
-        data.payload.data.forEach((table) => {
-          if (table.scope == 'experience') {
-            this.experienceTables.push(table)
-          } else {
-            this.studioTables.push(table)
-          }
-        })
-        if (this.initialLoad) {
-          this.initialLoad = false
-          if (this.experienceTables.length > 0) {
-            this.setCurrentSchema(this.experienceTables[0].name)
-            // this.highlightRow()
-          } else if (this.studioTables.length > 0) {
-            this.setCurrentSchema(this.studioTables[0].name)
-          }
+      this.experienceTables = []
+      this.studioTables = []
+      data.payload.data.forEach((table) => {
+        if (table.scope == 'experience') {
+          this.experienceTables.push(table)
         } else {
-          setTimeout(()=>{
-            //need timeout due to lifecycle bug
-            this.highlightEvent.emit(tableName)
-          }, 200)
+          this.studioTables.push(table)
         }
-
+      })
+      if (this.initialLoad) {
+        this.initialLoad = false
+        if (this.experienceTables.length > 0) {
+          this.setCurrentSchema(this.experienceTables[0].name)
+          // this.highlightRow()
+        } else if (this.studioTables.length > 0) {
+          this.setCurrentSchema(this.studioTables[0].name)
+        }
+      } else {
+        setTimeout(() => {
+          //need timeout due to lifecycle bug
+          this.highlightEvent.emit(tableName)
+        }, 200)
       }
     }).catch((err) => {
       console.error('Could not load data', err);
@@ -139,7 +133,7 @@ export class DataStoreSidebar {
                 )}
               </div>
             </div>
-            : <div hidden/>
+            : <div hidden />
           }
           {this.experienceTables.length > 0
             ? <div class='table-wrapper'>

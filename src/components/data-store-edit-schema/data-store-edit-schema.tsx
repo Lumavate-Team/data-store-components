@@ -57,49 +57,66 @@ export class EditSchema {
     this.columns = [...this.columns]
   }
 
-  @Listen('onValueChange')
+  @Listen('lumaInput')
   handleInput(event) {
     if (event.srcElement.tagName == 'DATA-STORE-EDIT-SCHEMA') {
-      // debugger
       let inputElId = event.detail.lumaElement.id
-      if (inputElId == 'input_edit-schema-header') {
+      if (inputElId == 'edit-schema-header') {
         this.tableName = event.detail.value
       } else {
         let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
         let rowKey = event.path[0].getAttribute('row-key')
         this.columns[lumaRowIndex][rowKey] = event.detail.value
         if (rowKey == 'columnName') {
-          let newColumn = this.columns[lumaRowIndex]['newColumn']
           this.repeater.getItem(lumaRowIndex).then((rsp) => {
             let devNameInput = rsp.rowEl.children[2]
-            if (newColumn) {
-              devNameInput.value = this.camelCase(event.detail.value)
-              this.columns[lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
-            }
+            devNameInput.value = this.camelCase(event.detail.value)
+            this.columns[lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
           })
-        }
-        if (rowKey == 'type') {
-          this.columns[lumaRowIndex][rowKey] = event.detail.value
-          let optionsInput = null
-          if (event.detail.value == 'Dropdown') {
-            this.repeater.getItem(lumaRowIndex).then((rsp) => {
-              optionsInput = rsp.rowEl.children[3]
-              optionsInput.disabled = false
-            })
-          } else {
-            this.repeater.getItem(lumaRowIndex).then((rsp) => {
-              optionsInput = rsp.rowEl.children[3]
-              optionsInput.value = ''
-              optionsInput.disabled = true
-            })
-          }
-        }
-        if (rowKey == 'toggle') {
-          this.columns[lumaRowIndex][rowKey] = event.detail.value
         }
       }
     }
-    //add update item call to repeater
+  }
+
+  @Listen('lumaChange')
+  handleChange(event) {
+    if (event.srcElement.tagName == 'DATA-STORE-EDIT-SCHEMA') {
+      this.tableName = event.detail.value
+      let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
+      let rowKey = event.path[0].getAttribute('row-key')
+      this.columns[lumaRowIndex][rowKey] = event.detail.value
+      if (rowKey == 'columnName') {
+        this.repeater.getItem(lumaRowIndex).then((rsp) => {
+          let devNameInput = rsp.rowEl.children[2]
+          devNameInput.value = this.camelCase(event.detail.value)
+          this.columns[lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
+        })
+      }
+      if (rowKey == 'type') {
+        this.columns[lumaRowIndex][rowKey] = event.detail.value
+        let optionsInput = null
+        if (event.detail.value == 'Dropdown') {
+          this.repeater.getItem(lumaRowIndex).then((rsp) => {
+            optionsInput = rsp.rowEl.children[3]
+            optionsInput.disabled = false
+            optionsInput.required = true
+          })
+        } else {
+          this.repeater.getItem(lumaRowIndex).then((rsp) => {
+            optionsInput = rsp.rowEl.children[3]
+            optionsInput.value = ''
+            optionsInput.disabled = true
+            optionsInput.required = false
+            setTimeout(() => {
+              optionsInput.getInputData()
+            }, 25);
+          })
+        }
+      }
+      if (rowKey == 'toggle') {
+        this.columns[lumaRowIndex][rowKey] = event.detail.value
+      }
+    }
   }
 
   camelCase(str) {
