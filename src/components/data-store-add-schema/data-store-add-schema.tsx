@@ -75,17 +75,8 @@ export class AddSchema {
   @Listen('lumaChange')
   handleChange(event) {
     if (event.srcElement.tagName == 'DATA-STORE-ADD-SCHEMA') {
-      this.tableName = event.detail.value
       let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
       let rowKey = event.path[0].getAttribute('row-key')
-      this.columns[lumaRowIndex][rowKey] = event.detail.value
-      if (rowKey == 'columnName') {
-        this.repeater.getItem(lumaRowIndex).then((rsp) => {
-          let devNameInput = rsp.rowEl.children[2]
-          devNameInput.value = this.camelCase(event.detail.value)
-          this.columns[lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
-        })
-      }
       if (rowKey == 'type') {
         this.columns[lumaRowIndex][rowKey] = event.detail.value
         let optionsInput = null
