@@ -49,7 +49,6 @@ export class DataStoreSidebar {
         this.tableEvent.emit(highlightTable)
         this.updateSidebar(highlightTable)
       } else{
-        debugger
         this.tableEvent.emit(null)
       }
     })
