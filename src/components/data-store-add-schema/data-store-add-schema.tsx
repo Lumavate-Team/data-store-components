@@ -12,7 +12,7 @@ export class AddSchema {
 
   @Prop() header: boolean = false
   @Prop({ mutable: true }) schema
-  url = '/ic/data-store-admin-ui/manage/'
+  url = '/ic/data-store/manage/'
   @Element() el: HTMLElement
   parent
   repeater

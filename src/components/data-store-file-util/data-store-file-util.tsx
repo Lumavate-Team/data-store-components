@@ -15,7 +15,7 @@ export class FileUtil {
   cancelbtn
   headerInput
   uploadInput
-  apiUrl = '/ic/data-store-admin-ui/manage/'
+  apiUrl = '/ic/data-store/manage/'
   @State() tableName
 
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) importEvent: EventEmitter

@@ -9,7 +9,7 @@ import { Component, Prop, Listen, Event, EventEmitter, State } from '@stencil/co
 export class DataStoreSidebar {
 
   @Prop() temp: string
-  url = '/ic/data-store-admin-ui/manage/type'
+  url = '/ic/data-store/manage/type'
   @State() experienceTables = []
   @State() studioTables = []
   addTableTag

@@ -21,7 +21,7 @@ export class EditSchema {
   selectMenu
   optionsInput
   invalidInput = false
-  url = '/ic/data-store-admin-ui/manage/'
+  url = '/ic/data-store/manage/'
   @State() tableName
   @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', 'active': true, newColumn: true }]
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) addSchemaEvent: EventEmitter
