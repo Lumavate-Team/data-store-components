@@ -228,7 +228,7 @@ export class EditSchema {
   .mdc-list{
     margin: 0px;
     padding: 0px;
-    // width: 100%;
+    width: 100%;
   }
   .mdc-list-item{
     margin: 0px;
