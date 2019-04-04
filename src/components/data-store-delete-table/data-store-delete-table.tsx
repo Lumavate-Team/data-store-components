@@ -12,7 +12,7 @@ export class DeleteTable {
 
   @Prop() header: boolean = false
   @Prop({ mutable: true }) schema
-  url = '/ic/data-store-admin-ui/manage/type/'
+  url = 'http://localhost:5005/ic/data-store-admin-ui/manage/type/'
   @Element() el: HTMLElement
   parent
   @State() tableName
