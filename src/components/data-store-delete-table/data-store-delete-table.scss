@@ -25,13 +25,41 @@
     background-color: white;
   }
 
+  #delete{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  #contains-data{
+    display: none;
+    font-size: 14px
+  }
+
+  .header{
+    height: 45px;
+    font-weight: bold;
+  }
   .row{
     height: 45px;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     flex-direction: row;
     width: 85%;
+  }
+
+  .row-ok{
+    height: 45px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+    width: 85%;
+    padding-top: 25px;
   }
   .button{
     cursor: pointer;

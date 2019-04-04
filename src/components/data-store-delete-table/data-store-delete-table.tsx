@@ -12,22 +12,31 @@ export class DeleteTable {
 
   @Prop() header: boolean = false
   @Prop({ mutable: true }) schema
-  url = '/ic/data-store/manage/type/'
+  url = 'http://localhost:5005/ic/data-store/manage/type/'
   @Element() el: HTMLElement
   parent
   @State() tableName
   tableId
   body
+  containsDataEl
+  deleteEl
   @Event({ eventName: 'delete', composed: true, bubbles: true, cancelable: false }) deleteSchemaEvent: EventEmitter
-
-  componentWillLoad(){
-    this.body = document.querySelector('body')
-  }
 
   @Method()
   getTableInfo(tableId, tableName) {
     this.tableId = tableId
     this.tableName = tableName
+    this.deleteEl.style.display = 'flex'
+    this.containsDataEl.style.display = 'none'
+  }
+
+  action() {
+    this.deleteEl.style.display = 'none'
+    this.containsDataEl.style.display = 'flex'
+    this.containsDataEl.style.flexDirection = 'column'
+    this.containsDataEl.style.justifyContent = 'center'
+    this.containsDataEl.style.alignItems = 'center'
+
   }
 
   cancel() {
@@ -39,37 +48,46 @@ export class DeleteTable {
       "Content-Type": "application/json"
     })
 
-      return fetch(this.url +this.tableId, {
-        headers: reqHeaders,
-        method: 'delete'
-      }).then(rsp => {
-        return rsp
-      }).then((r) => {
-        if(r.status == 400){
-          this.initNotification()
-          this.cancel()
-        }else{
-          this.deleteSchemaEvent.emit()
-          this.cancel()
-        }
-      }).catch((err) => {
-        console.error('Failed to delete table', err);
-      })
-  }
-
-  initNotification() {
-    let toast = document.createElement('data-store-toast')
-    toast.line1 = 'Cannot delete type with data linked to it'
-    this.body.appendChild(toast)
+    return fetch(this.url + this.tableId, {
+      headers: reqHeaders,
+      method: 'delete'
+    }).then(rsp => {
+      return rsp
+    }).then((r) => {
+      if (r.status == 400) {
+        this.action()
+      } else {
+        this.deleteSchemaEvent.emit()
+        this.cancel()
+      }
+    }).catch((err) => {
+      console.error('Failed to delete table', err);
+    })
   }
 
   render() {
     return (
       <div id='parent' ref={(el) => this.parent = el as HTMLElement}>
-        Permanently delete table?
-        <div class='row'>
-          <button class='button' onClick={() => this.cancel()}>Cancel</button>
-          <button class='button' onClick={() => this.delete()}>Delete</button>
+        <div id='delete' ref={(el) => this.deleteEl = el as HTMLElement}>
+          <div class='header'>
+            Permanently delete table?
+          </div>
+          <div class='row'>
+            <luma-button id='ds-cancel' text='Cancel' primary-color='#244862' onClick={() => this.cancel()}></luma-button>
+            <luma-button id='ds-delete' text='Delete' primary-color='#244862' onClick={() => this.delete()}></luma-button>
+          </div>
+
+        </div>
+        <div id='contains-data' ref={(el) => this.containsDataEl = el as HTMLElement}>
+          <div class='header'>
+            Unable to delete because table contains data.
+          </div>
+          To delete table, download and set "ACTION" to DELETE
+          <div class='row-ok'>
+
+            <luma-button id='ds-okay' text='Ok' primary-color='#244862' onClick={() => this.cancel()}></luma-button>
+          </div>
+
         </div>
       </div>
     )
