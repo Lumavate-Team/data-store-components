@@ -16,10 +16,15 @@ export class FileUtil {
   headerInput
   uploadInput
   apiUrl = '/ic/data-store/manage/'
+  body
   @State() tableName
 
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) importEvent: EventEmitter
 
+
+  componentWillLoad(){
+    this.body = document.querySelector('body')
+  }
 
   @Method()
   openFileUtil(tableName, apiUrl) {
@@ -80,6 +85,7 @@ export class FileUtil {
         }).then(data => {
           this.initNotification(data.payload.data, true)
           this.importEvent.emit(this.tableName)
+          this.cancel()
         }).catch((err) => {
           console.error('Could not load data', err);
         })
@@ -104,7 +110,7 @@ export class FileUtil {
     } else {
       toast.line1 = text
     }
-    this.parent.appendChild(toast)
+    this.body.appendChild(toast)
 
   }
 
