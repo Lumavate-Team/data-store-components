@@ -134,7 +134,7 @@ export class DataStoreSidebar {
             </div>
             : <div hidden />
           }
-          {this.experienceTables.length > 0
+          {this.studioTables.length > 0
             ? <div class='table-wrapper'>
               <div class='header'>
                 Studio
