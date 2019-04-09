@@ -11,6 +11,7 @@ export class DataStoreToast {
     @Prop() line1: string = ''
     @Prop() line2: string = ''
     @Prop() line3: string = ''
+    @Prop() error: boolean = false
 
     @Element() el: HTMLElement
     toast: HTMLElement
@@ -18,6 +19,9 @@ export class DataStoreToast {
     componentDidLoad() {
         this.toast.style.display = "block"
         this.toast.style.display = "grid"
+        if(this.error){
+            this.toast.style.backgroundColor ='#F44336'
+        }
         var self = this
         setTimeout(function () {
             setTimeout(() => { self.el.parentElement.removeChild(self.el) }, 8000)

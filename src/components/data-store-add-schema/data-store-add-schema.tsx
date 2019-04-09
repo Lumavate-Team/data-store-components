@@ -21,13 +21,17 @@ export class AddSchema {
   headerInput
   addbtn
   invalidInput = false
+  body
   @State() tableName
   @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', 'active': true }]
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) addSchemaEvent: EventEmitter
 
+  componentWillLoad(){
+    this.body = document.querySelector('body')
+  }
+
   @Method()
   updateColumns(tableName = '') {
-
     this.cancelbtn.style.width = ''
     this.cancelbtn.style.paddingRight = '10px'
     this.savebtn.style.width = ''
@@ -175,7 +179,7 @@ export class AddSchema {
 
     this.checkInputs().then(() => {
       if (this.invalidInput) {
-        console.log('no table for you')
+        // console.log('no table for you')
       } else {
         return fetch(this.url + this.tableName + '/schema', {
           headers: reqHeaders,
@@ -183,8 +187,10 @@ export class AddSchema {
           body: JSON.stringify(this.columns)
         }).then(rsp => {
           return rsp.json()
-        }).then(() => {
-          // debugger
+        }).then((r) => {
+          if(r.error){
+            this.initNotification(r.error)
+          }
           this.addSchemaEvent.emit(this.tableName)
           this.cancel()
         }).catch((err) => {
@@ -196,6 +202,13 @@ export class AddSchema {
   }
 
 
+  initNotification(text) {
+    let toast = document.createElement('data-store-toast')
+    toast.error = true
+    toast.line1 = text
+    this.body.appendChild(toast)
+
+  }
 
 
   render() {
