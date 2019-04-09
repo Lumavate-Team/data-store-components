@@ -190,9 +190,11 @@ export class AddSchema {
         }).then((r) => {
           if(r.error){
             this.initNotification(r.error)
+            this.cancel()
+          }else{
+            this.addSchemaEvent.emit(this.tableName)
+            this.cancel()
           }
-          this.addSchemaEvent.emit(this.tableName)
-          this.cancel()
         }).catch((err) => {
           console.error('Failed to add schema to table', err);
         })
