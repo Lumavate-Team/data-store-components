@@ -56,7 +56,6 @@ export class DataStoreTable {
   }
 
   openFileUtilModal() {
-    console.log(this.fileUtilTag)
     this.fileUtilTag.openFileUtil(this.tableName, this.url)
     this.fileUtilTag.style.display = 'flex'
   }
