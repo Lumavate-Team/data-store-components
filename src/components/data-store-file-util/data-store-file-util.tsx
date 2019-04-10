@@ -85,6 +85,7 @@ export class FileUtil {
         }).then(data => {
           this.initNotification(data.payload.data, true)
           this.importEvent.emit(this.tableName)
+          this.uploadInput.value= null
           this.cancel()
         }).catch((err) => {
           console.error('Could not load data', err);
