@@ -23,6 +23,12 @@
     cursor: pointer;
   }
 
+  #table{
+    box-shadow: 0px 2px 1px 1px rgb(194, 194, 194);
+    margin-left: 27px;
+    margin-right: 27px;
+  }
+
   #left {
     display: flex;
     flex: 1 35%;
@@ -57,6 +63,8 @@
   #left-row{
     display: flex;
     color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    margin-left: 57px;
   }
   #right-row{
     height: 100%;
@@ -71,6 +79,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     position: relative;
+    box-shadow: 1px 1px 1px 1px rgb(194, 194, 194);
   }
 
   #spacer{
@@ -81,8 +90,22 @@
 
   #nested-row{
     display: flex;
-    width: 225px;
+    width: 240px;
     align-items: center;
-    justify-content: space-center;
+    justify-content: space-around;
+    margin-right: 20px;
+  }
+
+  #table-name {
+    justify-content: flex-start;
+    width:  100%;
+    margin-left: 60px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .dash{
+    margin-left: 8px;
+    margin-right: 8px;
   }
 }

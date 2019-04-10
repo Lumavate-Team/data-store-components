@@ -121,7 +121,7 @@ export class DataStoreSidebar {
           {this.experienceTables.length > 0
             ? <div class='table-wrapper'>
               <div class='header'>
-                Experience
+              <div class='left-pad'/> Experience
               </div>
               <div class='tables'>
 
@@ -137,7 +137,7 @@ export class DataStoreSidebar {
           {this.studioTables.length > 0
             ? <div class='table-wrapper'>
               <div class='header'>
-                Studio
+                <div class='left-pad'/>Studio
               </div>
               <div class='tables'>
                 {this.studioTables.map((table) =>

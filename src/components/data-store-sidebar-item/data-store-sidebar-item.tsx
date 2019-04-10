@@ -31,7 +31,7 @@ export class DataStoreSidebarItem {
   highlight(tableName) {
     // debugger
     if (tableName != this.tableName) {
-      this.tableItem.style.backgroundColor = 'rgb(255, 255, 255)'
+      this.tableItem.style.backgroundColor = '#f7f7f7'
     } else if (this.tableItem.style.backgroundColor != 'rgba(0, 0, 0, 0.3)') {
       this.tableItem.style.backgroundColor = 'rgba(0, 0, 0, 0.3)'
       this.highlightEvent.emit(tableName)

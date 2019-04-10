@@ -77,8 +77,11 @@ export class DataStoreTable {
           <div id='left'>
             <div id='table-name'>{this.tableName}</div>
             <div id='left-row'>
-              <div class='text'>{this.tableData.length} Attributes</div>
-              <div class='text'> -</div>
+              {this.tableData.length == 1
+                ?<div class='text'>{this.tableData.length} Attribute</div>
+                :<div class='text'>{this.tableData.length} Attributes</div>
+              }
+              <div class='text dash'> -</div>
               <div class='text'>/ic/{this.tableName}</div>
             </div>
           </div>

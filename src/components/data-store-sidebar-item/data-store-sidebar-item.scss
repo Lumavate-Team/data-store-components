@@ -3,6 +3,7 @@
   height: 100%;
   width: 100%;
   font-family: 'Roboto', sans-serif;
+  // background-color: #f7f7f7;
   // background-color: rgb(255,255,255);
 
   #parent{
@@ -28,6 +29,7 @@
   }
 
   .table-item{
+    background-color: #f7f7f7;
     height: 48px;
     display: flex;
     align-content: stretch;
@@ -49,7 +51,7 @@
   }
 
   .records{
-    flex: 1 35%;
+    flex: 1 20%;
     align-self: center;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.5);
