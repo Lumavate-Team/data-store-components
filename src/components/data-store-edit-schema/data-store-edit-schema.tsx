@@ -32,8 +32,8 @@ export class EditSchema {
     this.cancelbtn.style.paddingRight = '10px'
     this.savebtn.style.width = ''
     this.addbtn.style.width = ''
-    this.headerInput.style.width = '85%'
-    this.repeater.style.width = '85%'
+    this.headerInput.style.width = '100%'
+    this.repeater.style.width = '100%'
     this.tableName = tableName
     this.columns = columns
     this.repeater.setData(this.columns)
@@ -43,9 +43,6 @@ export class EditSchema {
     this.columns = [...this.columns, { columnName: '', type: '', devName: '', options: '', 'active': true, newColumn: true }]
     this.repeater.setData(this.columns)
   }
-
-
-
 
   @Method()
   componentWillUpdate() {
@@ -125,7 +122,6 @@ export class EditSchema {
     return str.toLowerCase()
   }
 
-
   handleHeaderInput(event) {
     this.tableName = event.target.value
   }
@@ -201,53 +197,54 @@ export class EditSchema {
     )
   }
 
-    // fetch(this.url + this.tableName + '/schema', {
-    //   headers: reqHeaders,
-    //   method: 'put',
-    //   body: JSON.stringify(this.columns)
-    // }).then(rsp => {
-    //   return rsp.json()
-    // }).then(() => {
-    //   this.addSchemaEvent.emit(this.tableName)
-    //   this.cancel()
-    // }).catch((err) => {
-    //   console.error('Failed to add schema to table', err);
-    // })
-    render() {
-      let template = `
-    <luma-input-text id="columnName" row-key="columnName" class="edit-schema-row-item" primary-color="#244862" placeholder="Column Name" input-style="filled" value={columnName} required></luma-input-text>
-    <luma-select id="type" row-key="type" class="edit-schema-row-item" primary-color="#244862" option-csv="Text,Numeric,Dropdown,Image" selected-value={type} placeholder="Select Type" select-style="filled"></luma-select>
-    <luma-input-text id="devName" row-key="devName" class="edit-schema-row-item" primary-color="#244862" placeholder="Dev Name" input-style="filled" value={devName} readonly="true"></luma-input-text>
-    <luma-input-text id="options" row-key="options" class="edit-schema-row-item" primary-color="#244862" pattern='^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$' placeholder="Options" input-style="filled" value={options} disabled="true"></luma-input-text>
-    <luma-toggle id='column-toggle'row-key="active" secondary-color='#244862' value={active} ></luma-toggle>`
+  // fetch(this.url + this.tableName + '/schema', {
+  //   headers: reqHeaders,
+  //   method: 'put',
+  //   body: JSON.stringify(this.columns)
+  // }).then(rsp => {
+  //   return rsp.json()
+  // }).then(() => {
+  //   this.addSchemaEvent.emit(this.tableName)
+  //   this.cancel()
+  // }).catch((err) => {
+  //   console.error('Failed to add schema to table', err);
+  // })
+  render() {
+        let template = `
+      <luma-input-text id="columnName" row-key="columnName" class="edit-schema-row-item" primary-color="#244862" placeholder="Column Name" input-style="filled" value={columnName} required></luma-input-text>
+      <luma-select id="type" row-key="type" class="edit-schema-row-item" primary-color="#244862" option-csv="Text,Numeric,Dropdown,Image" selected-value={type} placeholder="Select Type" select-style="filled"></luma-select>
+      <luma-input-text id="devName" row-key="devName" class="edit-schema-row-item" primary-color="#244862" placeholder="Dev Name" input-style="filled" value={devName} readonly="true"></luma-input-text>
+      <luma-input-text id="options" row-key="options" class="edit-schema-row-item" primary-color="#244862" pattern='^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$' placeholder="Options" input-style="filled" value={options} disabled="true"></luma-input-text>
+      <luma-toggle id='column-toggle'row-key="active" secondary-color='#244862' value={active} ></luma-toggle>`
 
-      let styles = `
-  .edit-schema-row-item{
-    padding-right: 32px;
-  }
-  .mdc-list{
-    margin: 0px;
-    padding: 0px;
-    width: 100%;
-  }
-  .mdc-list-item{
-    margin: 0px;
-    padding: 0px;
-    // height:70px;
-  }
+        let styles = `
+    .edit-schema-row-item{
+      padding-right: 32px;
+    }
+    .mdc-list{
+      margin: 0px;
+      padding: 0px;
+      width: 100%;
+    }
+    .mdc-list-item{
+      margin: 0px;
+      padding: 0px;
+      // height:70px;
+    }
 
-  .mdc-list .mdc-list-item{
-    height: auto;
-    padding:0px;
-  }
+    .mdc-list .mdc-list-item{
+      height: auto;
+      padding:0px;
+    }
 
-  #column-toggle{
-    padding-bottom: 19px;
-  }
-  `
+    #column-toggle{
+      padding-bottom: 19px;
+    }
+    `
 
-      return (
-        <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
+    return (
+      <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
+        <div id='wrapper'>
           <luma-input-text id="edit-schema-header" class="edit-schema-header" readonly="true" input-style="filled" value={this.tableName} primary-color="#244862" ref={(el) => this.headerInput = el as HTMLElement}></luma-input-text>
           <luma-repeater id="edit-schema-repeater" class="row-container" template={template} template-css-classes={styles} ref={(el) => this.repeater = el as HTMLElement}></luma-repeater>
           <luma-button id="add-row" class='add-row' text="Add" icon="control_point" button-type="flat" primary-color="#FFF" onClick={() => this.addColumn()} ref={(el) => this.addbtn = el as HTMLElement}></luma-button>
@@ -257,6 +254,7 @@ export class EditSchema {
             <luma-button id="save-schema" text="Save" primary-color="#244862" onClick={() => this.saveTable()} ref={(el) => this.savebtn = el as HTMLElement}></luma-button>
           </div>
         </div>
-      )
-    }
+      </div>
+    )
   }
+}

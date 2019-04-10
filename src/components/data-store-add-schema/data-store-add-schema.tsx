@@ -26,7 +26,7 @@ export class AddSchema {
   @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', 'active': true }]
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) addSchemaEvent: EventEmitter
 
-  componentWillLoad(){
+  componentWillLoad() {
     this.body = document.querySelector('body')
   }
 
@@ -36,8 +36,8 @@ export class AddSchema {
     this.cancelbtn.style.paddingRight = '10px'
     this.savebtn.style.width = ''
     this.addbtn.style.width = ''
-    this.headerInput.style.width = '85%'
-    this.repeater.style.width = '85%'
+    this.headerInput.style.width = '100%'
+    this.repeater.style.width = '100%'
     this.tableName = tableName
     this.columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', 'active': true }]
     this.repeater.setData(this.columns)
@@ -188,10 +188,10 @@ export class AddSchema {
         }).then(rsp => {
           return rsp.json()
         }).then((r) => {
-          if(r.error){
+          if (r.error) {
             this.initNotification(r.error)
             this.cancel()
-          }else{
+          } else {
             this.addSchemaEvent.emit(this.tableName)
             this.cancel()
           }
@@ -247,13 +247,15 @@ export class AddSchema {
 
     return (
       <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
-        <luma-input-text id="add-schema-header" class="add-schema-header" input-style="filled" value={this.tableName} primary-color="#244862" pattern='^[a-zA-Z1-9-]+$' ref={(el) => this.headerInput = el as HTMLElement}></luma-input-text>
-        <luma-repeater id="add-schema-repeater" class="row-container" template={template} template-css-classes={styles} ref={(el) => this.repeater = el as HTMLElement}></luma-repeater>
-        <luma-button id="add-row" class='add-row' text="Add" icon="control_point" button-type="flat" primary-color="#FFF" onClick={() => this.addColumn()} ref={(el) => this.addbtn = el as HTMLElement}></luma-button>
-        <div class="edit-schema-footer">
-          <div id="bottom-row-spacer"></div>
-          <luma-button id="cancel-schema" text="Cancel" primary-color="#244862" onClick={() => this.cancel()} ref={(el) => this.cancelbtn = el as HTMLElement}></luma-button>
-          <luma-button id="save-schema" text="Create" primary-color="#244862" onClick={() => this.createTable()} ref={(el) => this.savebtn = el as HTMLElement}></luma-button>
+        <div id='wrapper'>
+          <luma-input-text id="add-schema-header" class="add-schema-header" input-style="filled" value={this.tableName} primary-color="#244862" pattern='^[a-zA-Z1-9-]+$' ref={(el) => this.headerInput = el as HTMLElement}></luma-input-text>
+          <luma-repeater id="add-schema-repeater" class="row-container" template={template} template-css-classes={styles} ref={(el) => this.repeater = el as HTMLElement}></luma-repeater>
+          <luma-button id="add-row" class='add-row' text="Add" icon="control_point" button-type="flat" primary-color="#FFF" onClick={() => this.addColumn()} ref={(el) => this.addbtn = el as HTMLElement}></luma-button>
+          <div class="edit-schema-footer">
+            <div id="bottom-row-spacer"></div>
+            <luma-button id="cancel-schema" text="Cancel" primary-color="#244862" onClick={() => this.cancel()} ref={(el) => this.cancelbtn = el as HTMLElement}></luma-button>
+            <luma-button id="save-schema" text="Create" primary-color="#244862" onClick={() => this.createTable()} ref={(el) => this.savebtn = el as HTMLElement}></luma-button>
+          </div>
         </div>
       </div>
     )
