@@ -15,12 +15,14 @@ export class DataStoreSidebar {
   addTableTag
   initialLoad = true
   test = [1, 2, 3, 4, 5, 6, 7, 8]
+  namespace
 
   @Event({ eventName: 'table', composed: true, bubbles: true, cancelable: false }) tableEvent: EventEmitter
   @Event({ eventName: 'highlight', composed: true, bubbles: true, cancelable: false }) highlightEvent: EventEmitter
 
   componentWillLoad() {
     this.updateSidebar()
+    this.setNamespace()
   }
 
 
@@ -48,7 +50,7 @@ export class DataStoreSidebar {
         highlightTable = this.studioTables[0].name
         this.tableEvent.emit(highlightTable)
         this.updateSidebar(highlightTable)
-      } else{
+      } else {
         this.tableEvent.emit(null)
       }
     })
@@ -64,6 +66,10 @@ export class DataStoreSidebar {
 
   }
 
+  setNamespace() {
+    let urlParams = new URLSearchParams(window.location.search)
+    this.namespace = urlParams.get('namespace')
+  }
 
   getAuthToken() {
     var cookies = document.cookie.split(";");
@@ -115,49 +121,64 @@ export class DataStoreSidebar {
   }
 
   render() {
-    return (
-      <div id='parent'>
-        <div id='wrapper'>
-          {this.experienceTables.length > 0
-            ? <div class='table-wrapper'>
-              <div class='header'>
-              <div class='left-pad'/> Experience
-              </div>
-              <div class='tables'>
+    if (this.namespace) {
+      return (
+        <div id='parent'>
+          <div id='wrapper'>
+            {this.experienceTables.length > 0
+              ? <div class='table-wrapper'>
+                <div class='header'>
+                  <div class='left-pad' /> Experience
+                </div>
+                <div class='tables'>
 
-                {this.experienceTables.map((table) =>
-                  <div>
+                  {this.experienceTables.map((table) =>
+                    <div>
+                      <data-store-sidebar-item table-name={table.name} records={table.records}></data-store-sidebar-item>
+                    </div>
+                  )}
+                </div>
+              </div>
+              : <div hidden />
+            }
+            {this.studioTables.length > 0
+              ? <div class='table-wrapper'>
+                <div class='header'>
+                  <div class='left-pad' />Studio
+                </div>
+                <div class='tables'>
+                  {this.studioTables.map((table) =>
                     <data-store-sidebar-item table-name={table.name} records={table.records}></data-store-sidebar-item>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-            : <div hidden />
-          }
-          {this.studioTables.length > 0
-            ? <div class='table-wrapper'>
-              <div class='header'>
-                <div class='left-pad'/>Studio
-              </div>
-              <div class='tables'>
-                {this.studioTables.map((table) =>
-                  <data-store-sidebar-item table-name={table.name} records={table.records}></data-store-sidebar-item>
-                )}
-              </div>
-            </div>
-            : <div class='table-wrapper'>
-              <div class='tables'>
-                {this.studioTables.map((table) =>
-                  <data-store-sidebar-item table-name={table.name} records={table.records}></data-store-sidebar-item>
-                )}
-              </div>
-            </div>
-          }
-        </div>
+              : <div hidden />
+            }
+          </div>
 
-        <luma-button id='add-table' class='add-table' text='Add Table' primary-color='#244862' onClick={() => this.addTable()}></luma-button>
-        <data-store-add-schema ref={(el) => this.addTableTag = el as HTMLElement}></data-store-add-schema>
-      </div>
-    )
+          <luma-button id='add-table' class='add-table' text='Add Table' primary-color='#244862' onClick={() => this.addTable()}></luma-button>
+          <data-store-add-schema ref={(el) => this.addTableTag = el as HTMLElement}></data-store-add-schema>
+        </div>
+      )
+    } else {
+      return (
+        <div id='parent'>
+          <div id='wrapper'>
+            {this.studioTables.length > 0
+              ? <div class='table-wrapper'>
+                <div class='tables'>
+                  {this.studioTables.map((table) =>
+                    <data-store-sidebar-item table-name={table.name} records={table.records}></data-store-sidebar-item>
+                  )}
+                </div>
+              </div>
+              : <div hidden />
+            }
+          </div>
+          <luma-button id='add-table' class='add-table' text='Add Table' primary-color='#244862' onClick={() => this.addTable()}></luma-button>
+          <data-store-add-schema ref={(el) => this.addTableTag = el as HTMLElement}></data-store-add-schema>
+        </div>
+      )
+    }
   }
 }
