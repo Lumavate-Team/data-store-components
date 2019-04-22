@@ -67,10 +67,18 @@ export class DataStoreSidebar {
   }
 
   setNamespace() {
-    let urlParams = new URLSearchParams(window.location.search)
+    // let urlParams = new URLSearchParams(window.location.search)
     // urlParams.set('namespace', '1234')
-    this.namespace = urlParams.get('namespace')
+    // this.namespace = urlParams.get('namespace')
+    this.namespace = this.getUrlParameter('namespace')
     console.log('namespace: ' + this.namespace)
+  }
+
+  getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]')
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)')
+    var results = regex.exec(location.search)
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '))
   }
 
   getAuthToken() {
