@@ -16,8 +16,10 @@ export class DataStoreTable {
   editTableTag
   deleteTableTag
   fileUtilTag
-  tableName
+  tableName = ''
   tableId
+  scope
+  namespace
 
   getAuthToken() {
     var cookies = document.cookie.split(";");
@@ -29,7 +31,11 @@ export class DataStoreTable {
     }
   }
 
-
+  componentWillLoad() {
+    let urlParams = new URLSearchParams(window.location.search)
+    // urlParams.set('namespace', '1234')
+    this.namespace = urlParams.get('namespace')
+  }
 
   @Listen('body:table')
   getTableHandler(event: CustomEvent) {
@@ -39,17 +45,19 @@ export class DataStoreTable {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + this.getAuthToken()
       })
-      return fetch(this.url + event.detail + '/schema', {
+      return fetch(this.url + event.detail + '/schema?expand=type', {
         headers: reqHeaders
       }).then(rsp => {
         return rsp.json()
       }).then(data => {
         this.tableId = data.payload.data.type_id
         this.tableData = data.payload.data.columns
+        this.scope = data.payload.data.expand.type.scope
+        console.log(this.scope)
       }).catch((err) => {
         console.error('Could not load data', err);
       })
-    } else{
+    } else {
       this.tableName = ''
       this.tableData = []
     }
@@ -61,7 +69,9 @@ export class DataStoreTable {
   }
 
   editSchema() {
-    this.editTableTag.updateColumns(this.tableName, this.tableData)
+    let test = this.tableData
+    // let cloneTableData  = Object.assign([], this.tableData);
+    this.editTableTag.updateColumns(this.tableName, test)
     this.editTableTag.style.display = 'flex'
   }
 
@@ -71,44 +81,103 @@ export class DataStoreTable {
   }
 
   render() {
-    return (
-      <div id='parent'>
-        <div id='header-row'>
-          <div id='left'>
-            <div id='table-name'>{this.tableName}</div>
-            <div id='left-row'>
-              {this.tableData.length == 1
-                ?<div class='text'>{this.tableData.length} Attribute</div>
-                :<div class='text'>{this.tableData.length} Attributes</div>
-              }
-              <div class='text dash'> -</div>
-              <div class='text'>/ic/{this.tableName}</div>
-            </div>
-          </div>
-          <div id='right'>
-            <div id='right-row'>
-              <div id='spacer'></div>
-              <div id='nested-row'>
-                <i class='material-icons' id='edit' onClick={() => this.editSchema()}>edit</i>
-                <i class='material-icons' id='delete' onClick={() => this.deleteTable()}>delete</i>
-                <luma-button id='import-export' text='Export/Import' primary-color='#244862' onClick={() => this.openFileUtilModal()}></luma-button>
+    if (this.tableName == '') {
+      return (
+        <div>
+          No Table(s) Placeholder
+        </div>
+      )
+    }
+    else {
+      if (this.namespace) {
+        return (
+          <div id='parent'>
+            <div id='header-row'>
+              <div id='left'>
+                <div id='table-name'>{this.tableName}</div>
+                <div id='left-row'>
+                  {this.tableData.length == 1
+                    ? <div class='text'>{this.tableData.length} Attribute</div>
+                    : <div class='text'>{this.tableData.length} Attributes</div>
+                  }
+                  <div class='text dash'> -</div>
+                  <div class='text'>/ic/{this.tableName}</div>
+                </div>
+              </div>
+              <div id='right'>
+                <div id='right-row'>
+                  <div id='spacer'></div>
+                  {this.scope == 'experience'
+                    ? <div id='nested-row'>
+                      <i class='material-icons' id='edit' onClick={() => this.editSchema()}>edit</i>
+                      <i class='material-icons' id='delete' onClick={() => this.deleteTable()}>delete</i>
+                      <div>
+                        <luma-button id='import-export' text='Export/Import' primary-color='#244862' onClick={() => this.openFileUtilModal()}></luma-button>
+                      </div>
+                    </div>
+                    : <div id='nested-row-studio'>
+                      <div>
+                        <luma-button id='import-export' text='Export/Import' primary-color='#244862' onClick={() => this.openFileUtilModal()}></luma-button>
+                      </div>
+                    </div>
+                  }
+                </div>
               </div>
             </div>
+            <div id='table'>
+              <data-store-table-item row={this.header} header={this.header['Header']}></data-store-table-item>
+              {this.tableData.map((row) =>
+                <data-store-table-item row={row} >
+                </data-store-table-item>
+              )}
+            </div>
+            <data-store-file-util ref={(el) => this.fileUtilTag = el as HTMLElement}></data-store-file-util>
+            <data-store-delete-table ref={(el) => this.deleteTableTag = el as HTMLElement}></data-store-delete-table>
+            <data-store-edit-schema ref={(el) => this.editTableTag = el as HTMLElement}></data-store-edit-schema>
           </div>
-        </div>
-        <div id='table'>
-          <data-store-table-item row={this.header} header={this.header['Header']}></data-store-table-item>
-          {this.tableData.map((row) =>
+        )
+      } else {
+        return (
+          <div id='parent'>
+            <div id='header-row'>
+              <div id='left'>
+                <div id='table-name'>{this.tableName}</div>
+                <div id='left-row'>
+                  {this.tableData.length == 1
+                    ? <div class='text'>{this.tableData.length} Attribute</div>
+                    : <div class='text'>{this.tableData.length} Attributes</div>
+                  }
+                  <div class='text dash'> -</div>
+                  <div class='text'>/ic/{this.tableName}</div>
+                </div>
+              </div>
+              <div id='right'>
+                <div id='right-row'>
+                  <div id='spacer'></div>
+                  <div id='nested-row'>
+                    <i class='material-icons' id='edit' onClick={() => this.editSchema()}>edit</i>
+                    <i class='material-icons' id='delete' onClick={() => this.deleteTable()}>delete</i>
+                    <div>
+                      <luma-button id='import-export' text='Export/Import' primary-color='#244862' onClick={() => this.openFileUtilModal()}></luma-button>
+                    </div>
+                  </div>
 
-            <data-store-table-item row={row} >
-            </data-store-table-item>
-          )}
-        </div>
-
-        <data-store-file-util ref={(el) => this.fileUtilTag = el as HTMLElement}></data-store-file-util>
-        <data-store-delete-table ref={(el) => this.deleteTableTag = el as HTMLElement}></data-store-delete-table>
-        <data-store-edit-schema ref={(el) => this.editTableTag = el as HTMLElement}></data-store-edit-schema>
-      </div>
-    )
+                </div>
+              </div>
+            </div>
+            <div id='table'>
+              <data-store-table-item row={this.header} header={this.header['Header']}></data-store-table-item>
+              {this.tableData.map((row) =>
+                <data-store-table-item row={row} >
+                </data-store-table-item>
+              )}
+            </div>
+            <data-store-file-util ref={(el) => this.fileUtilTag = el as HTMLElement}></data-store-file-util>
+            <data-store-delete-table ref={(el) => this.deleteTableTag = el as HTMLElement}></data-store-delete-table>
+            <data-store-edit-schema ref={(el) => this.editTableTag = el as HTMLElement}></data-store-edit-schema>
+          </div>
+        )
+      }
+    }
   }
 }

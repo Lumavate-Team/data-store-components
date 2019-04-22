@@ -68,15 +68,16 @@ export class DataStoreSidebar {
 
   setNamespace() {
     let urlParams = new URLSearchParams(window.location.search)
+    // urlParams.set('namespace', '1234')
     this.namespace = urlParams.get('namespace')
   }
 
   getAuthToken() {
-    var cookies = document.cookie.split(";");
+    var cookies = document.cookie.split(";")
     for (var i = 0, len = cookies.length; i < len; i++) {
-      var cookie = cookies[i].split("=");
+      var cookie = cookies[i].split("=")
       if (cookie[0].trim() == "pwa_jwt") {
-        return cookie[1].trim();
+        return cookie[1].trim()
       }
     }
   }
@@ -156,7 +157,9 @@ export class DataStoreSidebar {
             }
           </div>
 
-          <luma-button id='add-table' class='add-table' text='Add Table' primary-color='#244862' onClick={() => this.addTable()}></luma-button>
+          <div>
+            <luma-button id='add-table' class='add-table' text='Add Table' primary-color='#244862' onClick={() => this.addTable()}></luma-button>
+          </div>
           <data-store-add-schema ref={(el) => this.addTableTag = el as HTMLElement}></data-store-add-schema>
         </div>
       )
@@ -175,7 +178,9 @@ export class DataStoreSidebar {
               : <div hidden />
             }
           </div>
-          <luma-button id='add-table' class='add-table' text='Add Table' primary-color='#244862' onClick={() => this.addTable()}></luma-button>
+          <div>
+            <luma-button id='add-table' class='add-table' text='Add Table' primary-color='#244862' onClick={() => this.addTable()}></luma-button>
+          </div>
           <data-store-add-schema ref={(el) => this.addTableTag = el as HTMLElement}></data-store-add-schema>
         </div>
       )

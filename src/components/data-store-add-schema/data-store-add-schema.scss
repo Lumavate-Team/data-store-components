@@ -63,12 +63,12 @@
     flex-direction: column;
     align-items: center;
     // flex-grow: 1;
-    overflow-y: auto;
+    // overflow-y: auto;
     // width: 100%;
   }
 
-  .bottom-row-spacer{
-    flex: 1 75%;
+  #bottom-row-spacer{
+    flex: 1;
     height: 45px;
   }
   .edit-schema-footer{
@@ -80,6 +80,10 @@
     width: 100%;
     // bottom: 25px;
     // padding-bottom: 25px;
+  }
+
+  .cancel-schema{
+    padding-right: 10px;
   }
 
   .material-icons {

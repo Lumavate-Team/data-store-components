@@ -35,24 +35,54 @@ export class AddSchema {
     this.cancelbtn.style.width = ''
     this.cancelbtn.style.paddingRight = '10px'
     this.savebtn.style.width = ''
+    this.savebtn.style.flex = ''
     this.addbtn.style.width = ''
+    this.addbtn.style.flex = ''
     this.headerInput.style.width = '100%'
     this.repeater.style.width = '100%'
     this.tableName = tableName
-    this.columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', 'active': true }]
-    this.repeater.setData(this.columns)
-
+    this.columns = []
   }
 
   addColumn() {
-    this.columns = [...this.columns, { columnName: '', 'type': '', 'devName': '', 'options': '', 'active': true }]
-    // console.log(this.columns)
-    this.repeater.setData(this.columns)
+    // let that = this
+    this.columns = [...this.columns, { columnName: '', type: '', devName: '', options: '', 'active': true }]
+    this.repeater.addItem({ columnName: '', 'type': '', 'devName': '', 'options': '', 'active': true })
+    // this.repeater.setData(this.columns).then(()=>{
+    // console.log(that.repeater.getItem(0))
+    // this.columns.forEach((_,index) =>{
+    //   this.repeater.getItem(index).then(rsp => {
+    //     let optionsInput = rsp.rowEl.children[3]
+    //     // console.log(optionsInput.shadowRoot.childNodes[1].classList)
+    //     optionsInput.shadowRoot.childNodes[1].classList.remove('mdc-text-field--disabled')
+    //     optionsInput.shadowRoot.childNodes[1].style.backgroundColor='rgb(247, 247, 247)'
+    //     debugger
+    //     // console.log(rsp.rowEl.children[4].childNodes[1])
+    //     // rsp.rowEl.children[4].childNodes[1].innerHTML = 'test'
+    //     // console.log(rsp.rowEl.children[4].childNodes[1].innerHTML)
+    //   })
+    // })
+    // })
   }
 
   deleteColumn(index) {
     this.columns.splice(index, 1)
     this.columns = [...this.columns]
+  }
+
+  greyOutOptions() {
+    this.columns.forEach((_, index) => {
+      this.repeater.getItem(index).then(rsp => {
+        let optionsInput = rsp.rowEl.children[3]
+        // console.log(optionsInput.shadowRoot.childNodes[1].classList)
+        optionsInput.shadowRoot.childNodes[1].classList.remove('mdc-text-field--disabled')
+        optionsInput.shadowRoot.childNodes[1].style.backgroundColor = 'rgb(247, 247, 247)'
+        // debugger
+        // console.log(rsp.rowEl.children[4].childNodes[1])
+        // rsp.rowEl.children[4].childNodes[1].innerHTML = 'test'
+        // console.log(rsp.rowEl.children[4].childNodes[1].innerHTML)
+      })
+    })
   }
 
   @Listen('lumaInput')
@@ -82,6 +112,7 @@ export class AddSchema {
       let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
       let rowKey = event.path[0].getAttribute('row-key')
       if (rowKey == 'type') {
+        // debugger
         this.columns[lumaRowIndex][rowKey] = event.detail.value
         let optionsInput = null
         if (event.detail.value == 'Dropdown') {
@@ -89,13 +120,16 @@ export class AddSchema {
             optionsInput = rsp.rowEl.children[3]
             optionsInput.disabled = false
             optionsInput.required = true
+            optionsInput.placeholder = 'Options'
           })
         } else {
           this.repeater.getItem(lumaRowIndex).then((rsp) => {
             optionsInput = rsp.rowEl.children[3]
             optionsInput.value = ''
+            optionsInput.shadowRoot.childNodes[1].style.backgroundColor = '#f7f7f7'
             optionsInput.disabled = true
             optionsInput.required = false
+            optionsInput.placeholder = ''
             setTimeout(() => {
               optionsInput.getInputData()
             }, 25);
@@ -104,7 +138,22 @@ export class AddSchema {
       }
       if (rowKey == 'toggle') {
         this.columns[lumaRowIndex][rowKey] = event.detail.value
+        let status = event.detail.lumaElement
+        if (event.detail.value) {
+          status.parentNode.childNodes[1].innerText = 'Active'
+        } else {
+          status.parentNode.childNodes[1].innerText = 'Inactive'
+        }
+
       }
+    }
+  }
+
+  @Listen('lumaClick')
+  handleClick(event) {
+    if (event.detail.element.id == 'button_delete-row') {
+      this.columns.splice(event.detail.rowIndex, 1)
+      this.repeater.setData(this.columns)
     }
   }
 
@@ -128,18 +177,18 @@ export class AddSchema {
   }
   cancel() {
     this.el.style.display = 'none'
-    this.columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', 'active': true }]
-    // console.log(this.columns)
-    // this.repeater.setData(this.columns)
+    this.columns = []
+    this.repeater.setData(this.columns)
+    this.headerInput.setValidationMessage('')
     this.tableName = ''
   }
 
   getAuthToken() {
-    var cookies = document.cookie.split(";");
+    var cookies = document.cookie.split(";")
     for (var i = 0, len = cookies.length; i < len; i++) {
-      var cookie = cookies[i].split("=");
+      var cookie = cookies[i].split("=")
       if (cookie[0].trim() == "pwa_jwt") {
-        return cookie[1].trim();
+        return cookie[1].trim()
       }
     }
   }
@@ -147,26 +196,31 @@ export class AddSchema {
   checkInputs() {
     let self = this
     self.invalidInput = false
+    this.headerInput.getInputData().then(r => {
+      if (r.isValid == false) {
+        self.invalidInput = true
+      }
+    })
     return new Promise((resolve) => {
+      let promises = []
       self.columns.forEach((_, index) => {
-        let promises = []
         promises.push(self.repeater.getItem(index))
-        Promise.all(promises).then(rsp => {
-          rsp.forEach((row) => {
-            let childPromises = []
-            row.rowEl.childNodes.forEach((child) => {
-              childPromises.push(child.getInputData())
-            })
-            Promise.all(childPromises).then(r => {
-              r.forEach(inputField => {
-                if (inputField.isValid == false) {
-                  self.invalidInput = true
-                }
-              })
-              resolve()
-            })
+      });
+      return Promise.all(promises).then(rsp => {
+        let childPromises = []
+        rsp.forEach((row) => {
+          row.rowEl.childNodes.forEach((child) => {
+            childPromises.push(child.getInputData())
           })
         })
+        return Promise.all(childPromises);
+      }).then(r => {
+        r.forEach(inputField => {
+          if (inputField.isValid == false) {
+            self.invalidInput = true
+          }
+        })
+        resolve()
       })
     })
   }
@@ -177,30 +231,28 @@ export class AddSchema {
       "Authorization": "Bearer " + this.getAuthToken()
     })
 
+    let self = this
     this.checkInputs().then(() => {
-      if (this.invalidInput) {
-        // console.log('no table for you')
-      } else {
-        return fetch(this.url + this.tableName + '/schema', {
+      if (self.invalidInput) { } else {
+        return fetch(self.url + self.tableName + '/schema', {
           headers: reqHeaders,
           method: 'post',
-          body: JSON.stringify(this.columns)
+          body: JSON.stringify(self.columns)
         }).then(rsp => {
           return rsp.json()
         }).then((r) => {
           if (r.error) {
-            this.initNotification(r.error)
-            this.cancel()
+            self.initNotification(r.error)
+            self.cancel()
           } else {
-            this.addSchemaEvent.emit(this.tableName)
-            this.cancel()
+            self.addSchemaEvent.emit(self.tableName)
+            self.cancel()
           }
         }).catch((err) => {
           console.error('Failed to add schema to table', err);
         })
       }
-    }
-    )
+    })
   }
 
 
@@ -217,14 +269,21 @@ export class AddSchema {
     let template = `
     <luma-input-text id="columnName" row-key="columnName" class="edit-schema-row-item" primary-color="#244862" placeholder="Column Name" input-style="filled" value={columnName} required></luma-input-text>
     <luma-select id="type" row-key="type" class="edit-schema-row-item" primary-color="#244862" option-csv="Text,Numeric,Dropdown,Image" selected-value={type} placeholder="Select Type" select-style="filled" required></luma-select>
-    <luma-input-text id="devName" row-key="devName" class="edit-schema-row-item" primary-color="#244862" placeholder="Dev Name" input-style="filled" value={devName} readonly="true" required></luma-input-text>
-    <luma-input-text id="options" row-key="options" class="edit-schema-row-item" primary-color="#244862" pattern='^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$' placeholder="Options" input-style="filled" value={options} disabled="true"></luma-input-text>
-    <luma-toggle id='column-toggle' row-key="active" secondary-color='#244862' value={active} ></luma-toggle>`
+    <luma-input-text id="devName" row-key="devName" class="edit-schema-row-item" primary-color="#244862" placeholder="Dev Name" input-style="filled" value={devName} readonly="true"></luma-input-text>
+    <luma-input-text id="options" row-key="options" class="edit-schema-row-item" primary-color="#244862" pattern='^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$' input-style="filled" value={options} disabled="true"></luma-input-text>
+    <luma-button id="delete-row" class='delete-row' icon="remove_circle_outline" button-type="flat" primary-color="#f7f7f7"></luma-button>`
 
     let styles = `
   .edit-schema-row-item{
     padding-right: 32px;
+    font-family: 'Roboto', sans-serif;
   }
+
+  .options{
+    padding-right: 10px;
+    font-family: 'Roboto', sans-serif;
+  }
+
   .mdc-list{
     margin: 0px;
     padding: 0px;
@@ -233,7 +292,10 @@ export class AddSchema {
   .mdc-list-item{
     margin: 0px;
     padding: 0px;
-    // height:70px;
+  }
+
+  .mdc-text-field--disabled {
+    background-color: #f7f7f7;
   }
 
   .mdc-list .mdc-list-item{
@@ -243,18 +305,61 @@ export class AddSchema {
 
   #column-toggle{
     padding-bottom: 19px;
-  }`
+  }
 
+  :host .repeater-item{
+    height: 100px;
+    padding:0px;
+    display:flex;
+    align-items: center;
+  }
+
+  :host{
+    height: unset;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .row-toggle{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: flex-start;
+    width: 75px;
+    height:75px;
+  }
+
+  .repeater{
+    width:100%;
+    background-color: #f7f7f7;
+  }
+
+  .test{
+    width: 45px;
+  }
+
+  .small-text{
+    font-size:13px;
+  }
+  .delete-row{
+    min-width:unset;
+  }
+  `
     return (
       <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
         <div id='wrapper'>
-          <luma-input-text id="add-schema-header" class="add-schema-header" input-style="filled" value={this.tableName} primary-color="#244862" pattern='^[a-zA-Z1-9-]+$' ref={(el) => this.headerInput = el as HTMLElement}></luma-input-text>
+          <luma-input-text id="add-schema-header" class="add-schema-header" placeholder='Table Name' input-style="filled" value={this.tableName} primary-color="#244862" pattern='^[a-zA-Z1-9-]+$' ref={(el) => this.headerInput = el as HTMLElement} required></luma-input-text>
           <luma-repeater id="add-schema-repeater" class="row-container" template={template} template-css-classes={styles} ref={(el) => this.repeater = el as HTMLElement}></luma-repeater>
-          <luma-button id="add-row" class='add-row' text="Add" icon="control_point" button-type="flat" primary-color="#FFF" onClick={() => this.addColumn()} ref={(el) => this.addbtn = el as HTMLElement}></luma-button>
+
+          <div>
+            <luma-button id="add-row" class='add-row' text="Add" icon="control_point" button-type="flat" primary-color="#FFF" onClick={() => this.addColumn()} ref={(el) => this.addbtn = el as HTMLElement}></luma-button>
+          </div>
           <div class="edit-schema-footer">
             <div id="bottom-row-spacer"></div>
-            <luma-button id="cancel-schema" text="Cancel" primary-color="#244862" onClick={() => this.cancel()} ref={(el) => this.cancelbtn = el as HTMLElement}></luma-button>
-            <luma-button id="save-schema" text="Create" primary-color="#244862" onClick={() => this.createTable()} ref={(el) => this.savebtn = el as HTMLElement}></luma-button>
+            <div>
+              <luma-button id="cancel-schema" class='cancel-schema' text="Cancel" primary-color="#244862" onClick={() => this.cancel()} ref={(el) => this.cancelbtn = el as HTMLElement}></luma-button>
+              <luma-button id="save-schema" text="Create" primary-color="#244862" onClick={() => this.createTable()} ref={(el) => this.savebtn = el as HTMLElement}></luma-button>
+            </div>
           </div>
         </div>
       </div>

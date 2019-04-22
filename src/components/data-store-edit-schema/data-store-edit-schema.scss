@@ -49,8 +49,8 @@
   }
 
 
-  .bottom-row-spacer{
-    flex: 1 75%;
+  #bottom-row-spacer{
+    flex: 1;
     height: 45px;
   }
 
@@ -59,7 +59,6 @@
     flex-direction: column;
     align-items: center;
     // flex-grow: 1;
-    overflow-y: auto;
     width: 85%;
   }
 
@@ -69,8 +68,17 @@
     justify-content: flex-end;
     align-items: center;
     flex-direction: row;
-    width: 85%;
+    width: 100%;
     bottom: 25px;
+  }
+
+  .cancel-schema{
+    padding-right: 10px;
+  }
+
+  .repeater-overflow{
+    overflow-x: hidden;
+    overflow-y: unset;
   }
 
   .material-icons {

@@ -83,10 +83,16 @@ export class FileUtil {
         }).then(rsp => {
           return rsp.json()
         }).then(data => {
-          this.initNotification(data.payload.data, true)
-          this.importEvent.emit(this.tableName)
-          this.uploadInput.value= null
-          this.cancel()
+          if (data.error) {
+            console.log(data.error)
+            this.initNotification(data.error, false, true)
+            this.cancel()
+          } else {
+            this.initNotification(data.payload.data, true)
+            this.importEvent.emit(this.tableName)
+            this.uploadInput.value= null
+            this.cancel()
+          }
         }).catch((err) => {
           console.error('Could not load data', err);
         })
@@ -102,13 +108,16 @@ export class FileUtil {
     this.tableName = ''
   }
 
-  initNotification(text, upload = false) {
+  initNotification(text, upload = false, error = false) {
     let toast = document.createElement('data-store-toast')
     if (upload) {
       toast.line1 = 'Records added: ' + text.recordsAdded
       toast.line2 = "Records modified: " + text.recordsModified
       toast.line3 = 'Records Deleted: ' + text.recordsDeleted
-    } else {
+    } else if(error){
+      toast.error = true
+      toast.line1 = text
+    }else {
       toast.line1 = text
     }
     this.body.appendChild(toast)
@@ -119,10 +128,14 @@ export class FileUtil {
   render() {
     return (
       <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
-        <luma-input-text id="file-util-table" readonly="true" input-style="filled" value={this.tableName} primary-color="#244862" ref={(el) => this.headerInput = el as HTMLElement}></luma-input-text>
+        {/* <luma-input-text id="file-util-table" readonly="true" input-style="filled" value={this.tableName} primary-color="#244862" ref={(el) => this.headerInput = el as HTMLElement}></luma-input-text> */}
         <div id="container">
           <div class='close-row'>
-            <i class="material-icons" onClick={() => this.cancel()} >close</i>
+          <div class='spacer'></div>
+          <div class='spacer'>{this.tableName}</div>
+          <div class='spacer-end'>
+            <i class="material-icons padding-right" onClick={() => this.cancel()} >close</i>
+          </div>
           </div>
           <div class='title-row'>
             <div class='title'>Import your csv file</div>
@@ -130,12 +143,16 @@ export class FileUtil {
           <div class='container-item'>
             <div class='header'>Step 1: Download your Field spreadsheet.</div>
             <div class='instructions'>Make changes and add new records to the spreadsheet</div>
-            <luma-button id="export-data" text="Export Data" primary-color="#244862" onClick={() => this.getCSV()} ></luma-button>
+            <div>
+              <luma-button id="export-data" text="Export Data" primary-color="#244862" onClick={() => this.getCSV()} ></luma-button>
+            </div>
           </div>
           <div class='container-item'>
             <div class='header'>Step 2: Import the updated spreadsheet.</div>
             <div class='instructions'>After all changes have been made re-upload for them to take affect </div>
+            <div>
             <luma-button id="import-data" text="Import Data" primary-color="#244862" onClick={() => this.clickUpload()}></luma-button>
+            </div>
           </div>
           <input id="button-input" type="file" accept=".csv" onInput={(event) => this.uploadCSV(event)} ref={(el) => this.uploadInput = el as HTMLElement} hidden />
         </div>

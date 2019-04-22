@@ -52,6 +52,11 @@
     width: 85%;
   }
 
+  .inner-row{
+    display:flex;
+    // justify-content: space-around;
+  }
+
   .row-ok{
     height: 45px;
     display: flex;
