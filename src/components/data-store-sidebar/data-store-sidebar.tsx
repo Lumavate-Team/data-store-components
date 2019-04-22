@@ -70,6 +70,7 @@ export class DataStoreSidebar {
     let urlParams = new URLSearchParams(window.location.search)
     // urlParams.set('namespace', '1234')
     this.namespace = urlParams.get('namespace')
+    console.log('namespace: ' + this.namespace)
   }
 
   getAuthToken() {
