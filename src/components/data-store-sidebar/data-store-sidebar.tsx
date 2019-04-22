@@ -22,7 +22,6 @@ export class DataStoreSidebar {
 
   componentWillLoad() {
     this.updateSidebar()
-    this.setNamespace()
   }
 
 
@@ -66,21 +65,6 @@ export class DataStoreSidebar {
 
   }
 
-  setNamespace() {
-    // let urlParams = new URLSearchParams(window.location.search)
-    // urlParams.set('namespace', '1234')
-    // this.namespace = urlParams.get('namespace')
-    this.namespace = this.getUrlParameter('namespace')
-    console.log('namespace: ' + this.namespace)
-  }
-
-  getUrlParameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]')
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)')
-    var results = regex.exec(location.search)
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '))
-  }
-
   getAuthToken() {
     var cookies = document.cookie.split(";")
     for (var i = 0, len = cookies.length; i < len; i++) {
@@ -104,6 +88,7 @@ export class DataStoreSidebar {
     }).then(data => {
       this.experienceTables = []
       this.studioTables = []
+      this.namespace = data.payload.namespace
       data.payload.data.forEach((table) => {
         if (table.scope == 'experience') {
           this.experienceTables.push(table)
