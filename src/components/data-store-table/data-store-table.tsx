@@ -31,12 +31,6 @@ export class DataStoreTable {
     }
   }
 
-  componentWillLoad() {
-    let urlParams = new URLSearchParams(window.location.search)
-    // urlParams.set('namespace', '1234')
-    this.namespace = urlParams.get('namespace')
-  }
-
   @Listen('body:table')
   getTableHandler(event: CustomEvent) {
     this.tableName = event.detail
@@ -53,7 +47,7 @@ export class DataStoreTable {
         this.tableId = data.payload.data.type_id
         this.tableData = data.payload.data.columns
         this.scope = data.payload.data.expand.type.scope
-        console.log(this.scope)
+        this.namespace = data.payload.data.namespace
       }).catch((err) => {
         console.error('Could not load data', err);
       })
@@ -69,9 +63,11 @@ export class DataStoreTable {
   }
 
   editSchema() {
-    let test = this.tableData
-    // let cloneTableData  = Object.assign([], this.tableData);
-    this.editTableTag.updateColumns(this.tableName, test)
+    let clonedTableData = []
+    this.tableData.forEach(row => {
+      clonedTableData.push(Object.assign({},row))
+    })
+    this.editTableTag.updateColumns(this.tableName, clonedTableData)
     this.editTableTag.style.display = 'flex'
   }
 
