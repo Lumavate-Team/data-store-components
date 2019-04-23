@@ -296,7 +296,6 @@ export class EditSchema {
           }).then((r) => {
             if (r.error) {
               this.initNotification(r.error)
-              this.cancel()
             } else {
               this.addSchemaEvent.emit(this.tableName)
               this.cancel()
@@ -364,7 +363,7 @@ export class EditSchema {
     }
 
     #column-toggle{
-      width: unset;
+      width: unset !important;
       // padding-bottom: 19px;
     }
 
