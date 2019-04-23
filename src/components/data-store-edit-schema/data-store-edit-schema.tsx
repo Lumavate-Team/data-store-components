@@ -128,6 +128,7 @@ export class EditSchema {
               optionsInput.disabled = true
               optionsInput.required = false
               optionsInput.placeholder = ''
+              this.columns[lumaRowIndex]['options'] = ''
               setTimeout(() => {
                 optionsInput.getInputData()
               }, 25);
@@ -150,6 +151,7 @@ export class EditSchema {
               optionsInput.disabled = true
               optionsInput.required = false
               optionsInput.placeholder = ''
+              this.columns[lumaRowIndex]['options'] = ''
               setTimeout(() => {
                 optionsInput.getInputData()
               }, 25);
