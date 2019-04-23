@@ -243,7 +243,6 @@ export class AddSchema {
         }).then((r) => {
           if (r.error) {
             self.initNotification(r.error)
-            self.cancel()
           } else {
             self.addSchemaEvent.emit(self.tableName)
             self.cancel()
@@ -349,19 +348,20 @@ export class AddSchema {
       <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
         <div id='wrapper'>
           <luma-input-text id="add-schema-header" class="add-schema-header" placeholder='Table Name' input-style="filled" value={this.tableName} primary-color="#244862" pattern='^[a-zA-Z1-9-]+$' ref={(el) => this.headerInput = el as HTMLElement} required></luma-input-text>
+        <div class='repeater-overflow'>
           <luma-repeater id="add-schema-repeater" class="row-container" template={template} template-css-classes={styles} ref={(el) => this.repeater = el as HTMLElement}></luma-repeater>
-
+        </div>
+        <div>
+          <luma-button id="add-row" class='add-row' text="Add" icon="control_point" button-type="flat" primary-color="#FFF" onClick={() => this.addColumn()} ref={(el) => this.addbtn = el as HTMLElement}></luma-button>
+        </div>
+        <div class="edit-schema-footer">
+          <div id="bottom-row-spacer"></div>
           <div>
-            <luma-button id="add-row" class='add-row' text="Add" icon="control_point" button-type="flat" primary-color="#FFF" onClick={() => this.addColumn()} ref={(el) => this.addbtn = el as HTMLElement}></luma-button>
-          </div>
-          <div class="edit-schema-footer">
-            <div id="bottom-row-spacer"></div>
-            <div>
-              <luma-button id="cancel-schema" class='cancel-schema' text="Cancel" primary-color="#244862" onClick={() => this.cancel()} ref={(el) => this.cancelbtn = el as HTMLElement}></luma-button>
-              <luma-button id="save-schema" text="Create" primary-color="#244862" onClick={() => this.createTable()} ref={(el) => this.savebtn = el as HTMLElement}></luma-button>
-            </div>
+            <luma-button id="cancel-schema" class='cancel-schema' text="Cancel" primary-color="#244862" onClick={() => this.cancel()} ref={(el) => this.cancelbtn = el as HTMLElement}></luma-button>
+            <luma-button id="save-schema" text="Create" primary-color="#244862" onClick={() => this.createTable()} ref={(el) => this.savebtn = el as HTMLElement}></luma-button>
           </div>
         </div>
+      </div>
       </div>
     )
   }
