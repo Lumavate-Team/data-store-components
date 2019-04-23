@@ -201,6 +201,9 @@ export class AddSchema {
         self.invalidInput = true
       }
     })
+    if(this.columns.length == 0){
+      this.invalidInput = true
+    }
     return new Promise((resolve) => {
       let promises = []
       self.columns.forEach((_, index) => {
