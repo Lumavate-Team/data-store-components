@@ -103,6 +103,8 @@ export class DataStoreSidebar {
           // this.highlightRow()
         } else if (this.studioTables.length > 0) {
           this.setCurrentSchema(this.studioTables[0].name)
+        } else{
+          this.tableEvent.emit(null)
         }
       } else {
         setTimeout(() => {

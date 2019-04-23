@@ -16,7 +16,7 @@ export class DataStoreTable {
   editTableTag
   deleteTableTag
   fileUtilTag
-  tableName = ''
+  @State() tableName = undefined
   tableId
   scope
   namespace
@@ -78,13 +78,13 @@ export class DataStoreTable {
 
   render() {
     if (this.tableName == '') {
-      return (
-        <div>
-          No Table(s) Placeholder
-        </div>
-      )
+        return (
+          <div>
+            No Table(s) Placeholder
+          </div>
+        )
     }
-    else {
+    else if (this.tableName != null){
       if (this.namespace) {
         return (
           <div id='parent'>

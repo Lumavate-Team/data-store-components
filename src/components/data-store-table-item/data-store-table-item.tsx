@@ -31,7 +31,7 @@ export class DataStoreTableItem {
           <div class='row-item' >{this.row['columnName']}</div>
           <div class='row-item' >{this.row['type']}</div>
           <div class='row-item' >{this.row['devName']}</div>
-          <div class='row-item' >{this.row['options']}</div>
+          <div class='row-item options' >{this.row['options']}</div>
           <div class='spacer'></div>
         </div>
       )

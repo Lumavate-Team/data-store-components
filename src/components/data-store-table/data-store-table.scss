@@ -5,6 +5,7 @@
   font-stretch: normal;
   line-height: normal;
   letter-spacing: normal;
+  min-width: 0px;
 
   .material-icons {
     font-family: 'Material Icons';
@@ -101,7 +102,7 @@
     width: 240px;
     align-items: center;
     justify-content: flex-end;
-    margin-right: 20px;
+    margin-right: 26px;
   }
 
   #table-name {
