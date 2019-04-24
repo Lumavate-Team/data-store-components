@@ -104,7 +104,7 @@ export class AddSchema {
   }
 
   @Method()
-  updateColumns(tableName = '') {
+  updateColumns() {
     this.cancelbtn.style.width = ''
     this.cancelbtn.style.paddingRight = '10px'
     this.savebtn.style.width = ''
@@ -113,7 +113,6 @@ export class AddSchema {
     this.addbtn.style.flex = ''
     this.headerInput.style.width = '100%'
     this.repeater.style.width = '100%'
-    this.tableName = tableName
     this.columns = []
   }
 
@@ -150,8 +149,8 @@ export class AddSchema {
     this.el.style.display = 'none'
     this.columns = []
     this.repeater.setData(this.columns)
+    this.headerInput.setValue('')
     this.headerInput.setValidationMessage('')
-    this.tableName = ''
   }
 
   getAuthToken() {
@@ -267,10 +266,6 @@ export class AddSchema {
     padding: 0px;
   }
 
-  .mdc-text-field--disabled {
-    background-color: #f7f7f7;
-  }
-
   .mdc-list .mdc-list-item{
     height: auto;
     padding:0px;
@@ -284,13 +279,12 @@ export class AddSchema {
     height: 100px;
     padding:0px;
     display:flex;
-    align-items: center;
   }
 
   :host{
     height: unset;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow-x: unset;
+    overflow-y: unset;
   }
 
   .row-toggle{
@@ -307,21 +301,15 @@ export class AddSchema {
     background-color: #f7f7f7;
   }
 
-  .test{
-    width: 45px;
-  }
-
-  .small-text{
-    font-size:13px;
-  }
   .delete-row{
     min-width:unset;
+    padding-top: 30px;
   }
   `
     return (
       <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
         <div id='wrapper'>
-          <luma-input-text id="add-schema-header" class="add-schema-header" placeholder='Table Name' input-style="filled" value={this.tableName} primary-color="#244862" pattern='^[a-zA-Z1-9-]+$' ref={(el) => this.headerInput = el as HTMLElement} required></luma-input-text>
+          <luma-input-text id="add-schema-header" class="add-schema-header" placeholder='Table Name' input-style="filled" primary-color="#244862" pattern='^[a-zA-Z1-9-]+$' ref={(el) => this.headerInput = el as HTMLElement} required></luma-input-text>
           <div class='repeater-overflow'>
             <luma-repeater id="add-schema-repeater" class="row-container" template={template} template-css-classes={styles} ref={(el) => this.repeater = el as HTMLElement}></luma-repeater>
           </div>

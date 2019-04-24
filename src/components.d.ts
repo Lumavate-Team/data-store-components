@@ -15,7 +15,7 @@ export namespace Components {
   interface DataStoreAddSchema {
     'header': boolean;
     'schema': any;
-    'updateColumns': (tableName?: string) => void;
+    'updateColumns': () => void;
   }
   interface DataStoreAddSchemaAttributes extends StencilHTMLAttributes {
     'header'?: boolean;

@@ -346,10 +346,6 @@ export class EditSchema {
       padding: 0px;
     }
 
-    :host luma-input-text /deep/ .mdc-text-field--disabled {
-      background-color: #f7f7f7;
-    }
-
     .mdc-list .mdc-list-item{
       height: auto;
       padding:0px;
@@ -357,13 +353,14 @@ export class EditSchema {
 
     #column-toggle{
       width: unset !important;
+      padding-top: 33px;
+      padding-right: 6px;
     }
 
     :host .repeater-item{
-      height: 100px;
+      height: 104px;
       padding:0px;
       display:flex;
-      align-items: center;
     }
 
     :host{
@@ -390,12 +387,9 @@ export class EditSchema {
       width: 45px;
     }
 
-    .mdc-select-helper-text::before{
-      height:unset;
-    }
-
     .delete-row{
       min-width:unset;
+      padding-top: 30px;
     }
     `
 
