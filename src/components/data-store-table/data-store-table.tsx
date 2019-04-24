@@ -81,8 +81,17 @@ export class DataStoreTable {
   render() {
     if (this.tableName == '') {
         return (
-          <div>
-            No Table(s) Placeholder
+          <div class='placeholder'>
+            <img class='table-logo' src='/assets/Table.png' />
+            <div class='placeholder-header'>Looks like you haven’t added any tables</div>
+            <div class='placeholder-guide'>Data Tables are used to structure information that an experience uses and/or stores. Add and manage data through an import/export of a CSV file. </div>
+            <div class='arrow-wrapper'>
+              <div class='left-spacer'>
+                <img class='arrow-logo' src='/assets/Arrow.png'/>
+              </div>
+              <div class='right-spacer' ></div>
+            </div>
+            <div class='learn-more'>Learn more at <a href='https://developer.lumavate.com'>developer.lumavate.com</a></div>
           </div>
         )
     }
