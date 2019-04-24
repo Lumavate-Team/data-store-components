@@ -8,13 +8,15 @@ import { Component, Prop, Element } from '@stencil/core';
 
 export class DataStoreToast {
 
+    toast: HTMLElement
+
+    @Element() el: HTMLElement
+
     @Prop() line1: string = ''
     @Prop() line2: string = ''
     @Prop() line3: string = ''
     @Prop() error: boolean = false
 
-    @Element() el: HTMLElement
-    toast: HTMLElement
 
     componentDidLoad() {
         this.toast.style.display = "block"

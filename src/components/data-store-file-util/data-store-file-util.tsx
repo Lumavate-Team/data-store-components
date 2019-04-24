@@ -8,19 +8,21 @@ import { Component, Prop, State, Element, Method, Event, EventEmitter } from "@s
 })
 export class FileUtil {
 
-  @Prop() header: boolean = false
-  @Prop({ mutable: true }) schema
-  @Element() el: HTMLElement
   parent
   cancelbtn
   headerInput
   uploadInput
   apiUrl = '/ic/data-store/manage/'
   body
+
+  @Element() el: HTMLElement
+
   @State() tableName
 
-  @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) importEvent: EventEmitter
+  @Prop() header: boolean = false
+  @Prop({ mutable: true }) schema
 
+  @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) importEvent: EventEmitter
 
   componentWillLoad(){
     this.body = document.querySelector('body')
@@ -121,14 +123,11 @@ export class FileUtil {
       toast.line1 = text
     }
     this.body.appendChild(toast)
-
   }
-
 
   render() {
     return (
       <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
-        {/* <luma-input-text id="file-util-table" readonly="true" input-style="filled" value={this.tableName} primary-color="#244862" ref={(el) => this.headerInput = el as HTMLElement}></luma-input-text> */}
         <div id="container">
           <div class='close-row'>
           <div class='spacer'></div>

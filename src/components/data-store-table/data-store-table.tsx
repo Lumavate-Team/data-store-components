@@ -9,27 +9,19 @@ import { Component, Prop, Listen, State } from '@stencil/core';
 })
 export class DataStoreTable {
 
-  @Prop() temp: string
   url = '/ic/data-store/manage/'
   header = { 'columnName': 'Column', 'type': 'Type', 'devName': 'Dev Name', 'options': 'Options', 'Header': true }
-  @State() tableData = []
   editTableTag
   deleteTableTag
   fileUtilTag
-  @State() tableName = undefined
   tableId
   scope
   namespace
 
-  getAuthToken() {
-    var cookies = document.cookie.split(";");
-    for (var i = 0, len = cookies.length; i < len; i++) {
-      var cookie = cookies[i].split("=");
-      if (cookie[0].trim() == "pwa_jwt") {
-        return cookie[1].trim();
-      }
-    }
-  }
+  @State() tableData = []
+  @State() tableName = undefined
+
+  @Prop() temp: string
 
   @Listen('body:table')
   getTableHandler(event: CustomEvent) {
@@ -54,6 +46,16 @@ export class DataStoreTable {
     } else {
       this.tableName = ''
       this.tableData = []
+    }
+  }
+
+  getAuthToken() {
+    var cookies = document.cookie.split(";");
+    for (var i = 0, len = cookies.length; i < len; i++) {
+      var cookie = cookies[i].split("=");
+      if (cookie[0].trim() == "pwa_jwt") {
+        return cookie[1].trim();
+      }
     }
   }
 

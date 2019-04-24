@@ -8,26 +8,22 @@ import { Component, Prop, Listen, Event, EventEmitter, State } from '@stencil/co
 })
 export class DataStoreSidebar {
 
-  @Prop() temp: string
-  url = '/ic/data-store/manage/type'
-  @State() experienceTables = []
-  @State() studioTables = []
   addTableTag
   initialLoad = true
   test = [1, 2, 3, 4, 5, 6, 7, 8]
   namespace
+  url = '/ic/data-store/manage/type'
+
+  @State() experienceTables = []
+  @State() studioTables = []
+
+  @Prop() temp: string
 
   @Event({ eventName: 'table', composed: true, bubbles: true, cancelable: false }) tableEvent: EventEmitter
   @Event({ eventName: 'highlight', composed: true, bubbles: true, cancelable: false }) highlightEvent: EventEmitter
 
   componentWillLoad() {
     this.updateSidebar()
-  }
-
-
-  addTable() {
-    this.addTableTag.updateColumns()
-    this.addTableTag.style.display = 'flex'
   }
 
   @Listen('body:update')
@@ -40,7 +36,6 @@ export class DataStoreSidebar {
   deleteListener() {
     this.updateSidebar().then(() => {
       let highlightTable = null
-      // debugger
       if (this.experienceTables.length > 0) {
         highlightTable = this.experienceTables[0].name
         this.tableEvent.emit(highlightTable)
@@ -53,6 +48,11 @@ export class DataStoreSidebar {
         this.tableEvent.emit(null)
       }
     })
+  }
+
+  addTable() {
+    this.addTableTag.updateColumns()
+    this.addTableTag.style.display = 'flex'
   }
 
   setCurrentSchema(tableName) {
@@ -100,7 +100,6 @@ export class DataStoreSidebar {
         this.initialLoad = false
         if (this.experienceTables.length > 0) {
           this.setCurrentSchema(this.experienceTables[0].name)
-          // this.highlightRow()
         } else if (this.studioTables.length > 0) {
           this.setCurrentSchema(this.studioTables[0].name)
         } else{

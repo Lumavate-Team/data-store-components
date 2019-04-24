@@ -16,12 +16,10 @@
   align-items: center;
 
   #parent{
-    // position: relative;
     display: flex;
     width: 80%;
     height: auto;
     flex-direction: column;
-    // justify-content: center;
     align-items: center;
     background-color: white;
   }
@@ -30,14 +28,17 @@
     font-size: 18pt;
     padding-bottom: 15px;
   }
+
   .header{
     font-size: 16pt;
     padding-bottom: 8px;
   }
+
   .instructions{
     font-size: 12pt;
     padding-bottom: 8px;
   }
+
   #file-util-table{
     font-weight: bold;
   }
@@ -46,6 +47,7 @@
     display: flex;
     align-items: center;
   }
+
   .close-row{
     z-index: 50;
     display: flex;
@@ -63,6 +65,7 @@
     font-size: 22px;
     font-weight: bolder;
   }
+
   .spacer-end{
     display: flex;
     flex:1;
@@ -73,6 +76,7 @@
   .padding-right{
     padding-right:  15px;
   }
+
   #cancel-schema{
     padding-right: 10px
   }

@@ -43,6 +43,7 @@
     height: 45px;
     font-weight: bold;
   }
+
   .row{
     height: 45px;
     display: flex;
@@ -54,7 +55,6 @@
 
   .inner-row{
     display:flex;
-    // justify-content: space-around;
   }
 
   .row-ok{
@@ -66,6 +66,7 @@
     width: 85%;
     padding-top: 25px;
   }
+
   .button{
     cursor: pointer;
     display: flex;
@@ -76,6 +77,7 @@
     color: white;
     background-color: #244862
   }
+
   .highlight{
     background-color: rgba(0, 0, 0, 0.5);
   }

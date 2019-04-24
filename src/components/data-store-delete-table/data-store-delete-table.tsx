@@ -10,16 +10,20 @@ import { Component, Prop, State, Element, Event, EventEmitter, Method } from '@s
 })
 export class DeleteTable {
 
-  @Prop() header: boolean = false
-  @Prop({ mutable: true }) schema
-  url = '/ic/data-store/manage/type/'
-  @Element() el: HTMLElement
-  parent
-  @State() tableName
   tableId
   body
   containsDataEl
   deleteEl
+  url = '/ic/data-store/manage/type/'
+  parent
+
+  @Element() el: HTMLElement
+
+  @State() tableName
+
+  @Prop() header: boolean = false
+  @Prop({ mutable: true }) schema
+
   @Event({ eventName: 'delete', composed: true, bubbles: true, cancelable: false }) deleteSchemaEvent: EventEmitter
 
   @Method()
@@ -80,7 +84,6 @@ export class DeleteTable {
               <luma-button id='ds-delete' text='Delete' primary-color='#244862' onClick={() => this.delete()}></luma-button>
             </div>
           </div>
-
         </div>
         <div id='contains-data' ref={(el) => this.containsDataEl = el as HTMLElement}>
           <div class='header'>
@@ -88,10 +91,8 @@ export class DeleteTable {
           </div>
           To delete table, download and set "ACTION" to DELETE
           <div class='row-ok'>
-
             <luma-button id='ds-okay' text='Ok' primary-color='#244862' onClick={() => this.cancel()}></luma-button>
           </div>
-
         </div>
       </div>
     )

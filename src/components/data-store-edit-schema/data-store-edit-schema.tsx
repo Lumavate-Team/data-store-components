@@ -8,10 +8,6 @@ import { Component, Prop, State, Element, Event, EventEmitter, Method, Listen } 
 })
 export class EditSchema {
 
-  @Prop() header: boolean = false
-  @Prop({ mutable: true }) schema
-
-  @Element() el: HTMLElement
   parent
   repeaterOldColumns
   repeaterNewColumns
@@ -26,41 +22,20 @@ export class EditSchema {
   body
   oldColumnOffset
 
+  @Element() el: HTMLElement
+
   @State() tableName
   @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', 'active': true, newColumn: true }]
+
+  @Prop() header: boolean = false
+  @Prop({ mutable: true }) schema
+
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) addSchemaEvent: EventEmitter
-
-
 
   componentWillLoad() {
     this.body = document.querySelector('body')
   }
 
-
-  @Method()
-  updateColumns(tableName, columns) {
-    this.cancelbtn.style.width = ''
-    this.cancelbtn.style.paddingRight = '10px'
-    this.savebtn.style.width = ''
-    this.addbtn.style.width = ''
-    this.headerInput.style.width = '100%'
-    this.repeaterOldColumns.style.width = '100%'
-    this.repeaterNewColumns.style.display = 'none'
-    this.tableName = tableName
-    this.columns = columns
-    this.oldColumnOffset = this.columns.length
-    this.columns.forEach((column) => {
-      this.repeaterOldColumns.addItem(column)
-    })
-  }
-
-  addColumn() {
-    this.columns = [...this.columns, { columnName: '', type: '', devName: '', options: '', 'active': true, newColumn: true }]
-    this.repeaterNewColumns.addItem({ columnName: '', 'type': '', 'devName': '', 'options': '', 'active': true, newColumn: true })
-    this.repeaterNewColumns.style.display = 'inline'
-  }
-
-  @Method()
   componentWillUpdate() {
     this.headerInput.shadowRoot.querySelector('#input_edit-schema-header').pattern = '^[a-zA-Z1-9-]+$'
   }
@@ -109,7 +84,6 @@ export class EditSchema {
       let lumaRowIndex = parseInt(event.path[0].getAttribute('luma-row-index'))
       let rowKey = event.path[0].getAttribute('row-key')
       if (rowKey == 'type') {
-
         let optionsInput = null
         if (repeaterId == 'edit-schema-repeater-old') {
           this.columns[lumaRowIndex][rowKey] = event.detail.value
@@ -124,7 +98,6 @@ export class EditSchema {
             this.repeaterOldColumns.getItem(lumaRowIndex).then((rsp) => {
               optionsInput = rsp.rowEl.children[3]
               optionsInput.value = ''
-              // optionsInput.shadowRoot.childNodes[1].style.backgroundColor='#f7f7f7'
               optionsInput.disabled = true
               optionsInput.required = false
               optionsInput.placeholder = ''
@@ -147,7 +120,6 @@ export class EditSchema {
             this.repeaterNewColumns.getItem(lumaRowIndex).then((rsp) => {
               optionsInput = rsp.rowEl.children[3]
               optionsInput.value = ''
-              // optionsInput.shadowRoot.childNodes[1].style.backgroundColor='#f7f7f7'
               optionsInput.disabled = true
               optionsInput.required = false
               optionsInput.placeholder = ''
@@ -177,6 +149,28 @@ export class EditSchema {
     }
   }
 
+  @Method()
+  updateColumns(tableName, columns) {
+    this.cancelbtn.style.width = ''
+    this.cancelbtn.style.paddingRight = '10px'
+    this.savebtn.style.width = ''
+    this.addbtn.style.width = ''
+    this.headerInput.style.width = '100%'
+    this.repeaterOldColumns.style.width = '100%'
+    this.repeaterNewColumns.style.display = 'none'
+    this.tableName = tableName
+    this.columns = columns
+    this.oldColumnOffset = this.columns.length
+    this.columns.forEach((column) => {
+      this.repeaterOldColumns.addItem(column)
+    })
+  }
+
+  addColumn() {
+    this.columns = [...this.columns, { columnName: '', type: '', devName: '', options: '', 'active': true, newColumn: true }]
+    this.repeaterNewColumns.addItem({ columnName: '', 'type': '', 'devName': '', 'options': '', 'active': true, newColumn: true })
+    this.repeaterNewColumns.style.display = 'inline'
+  }
   camelCase(str) {
     return str.replace(/[-]/g, ' ') // convert hyphens to spaces
       .replace(/\s[a-z]/g, this.upperCase)//uppercase first letter of words
@@ -279,7 +273,6 @@ export class EditSchema {
     }
   }
 
-
   saveTable() {
     let reqHeaders = new Headers({
       "Content-Type": "application/json",
@@ -311,13 +304,11 @@ export class EditSchema {
     )
   }
 
-
   initNotification(text) {
     let toast = document.createElement('data-store-toast')
     toast.error = true
     toast.line1 = text
     this.body.appendChild(toast)
-
   }
 
   render() {
@@ -366,7 +357,6 @@ export class EditSchema {
 
     #column-toggle{
       width: unset !important;
-      // padding-bottom: 19px;
     }
 
     :host .repeater-item{
@@ -398,12 +388,6 @@ export class EditSchema {
 
     .test{
       width: 45px;
-    }
-
-    .column-toggle{
-      // width: 68px;
-      // height: 48px;
-      // padding: 0px;
     }
 
     .mdc-select-helper-text::before{

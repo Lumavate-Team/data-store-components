@@ -35,7 +35,6 @@ export namespace Components {
   }
 
   interface DataStoreEditSchema {
-    'componentWillUpdate': () => void;
     'header': boolean;
     'schema': any;
     'updateColumns': (tableName: any, columns: any) => void;

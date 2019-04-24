@@ -1,7 +1,5 @@
 
 import { Component, Prop, State, Element, Event, EventEmitter, Method, Listen } from '@stencil/core';
-// import { MDCTextField } from '@material/textfield';
-// import { MDCSelect } from '@material/select';
 
 @Component({
   tag: 'data-store-add-schema',
@@ -10,10 +8,6 @@ import { Component, Prop, State, Element, Event, EventEmitter, Method, Listen } 
 })
 export class AddSchema {
 
-  @Prop() header: boolean = false
-  @Prop({ mutable: true }) schema
-  url = '/ic/data-store/manage/'
-  @Element() el: HTMLElement
   parent
   repeater
   cancelbtn
@@ -22,67 +16,20 @@ export class AddSchema {
   addbtn
   invalidInput = false
   body
-  @State() tableName
+  url = '/ic/data-store/manage/'
+
+  @Element() el: HTMLElement
+
   @State() columns = [{ 'columnName': '', 'type': '', 'devName': '', 'options': '', 'active': true }]
+  @State() tableName
+
+  @Prop() header: boolean = false
+  @Prop({ mutable: true }) schema
+
   @Event({ eventName: 'update', composed: true, bubbles: true, cancelable: false }) addSchemaEvent: EventEmitter
 
   componentWillLoad() {
     this.body = document.querySelector('body')
-  }
-
-  @Method()
-  updateColumns(tableName = '') {
-    this.cancelbtn.style.width = ''
-    this.cancelbtn.style.paddingRight = '10px'
-    this.savebtn.style.width = ''
-    this.savebtn.style.flex = ''
-    this.addbtn.style.width = ''
-    this.addbtn.style.flex = ''
-    this.headerInput.style.width = '100%'
-    this.repeater.style.width = '100%'
-    this.tableName = tableName
-    this.columns = []
-  }
-
-  addColumn() {
-    // let that = this
-    this.columns = [...this.columns, { columnName: '', type: '', devName: '', options: '', 'active': true }]
-    this.repeater.addItem({ columnName: '', 'type': '', 'devName': '', 'options': '', 'active': true })
-    // this.repeater.setData(this.columns).then(()=>{
-    // console.log(that.repeater.getItem(0))
-    // this.columns.forEach((_,index) =>{
-    //   this.repeater.getItem(index).then(rsp => {
-    //     let optionsInput = rsp.rowEl.children[3]
-    //     // console.log(optionsInput.shadowRoot.childNodes[1].classList)
-    //     optionsInput.shadowRoot.childNodes[1].classList.remove('mdc-text-field--disabled')
-    //     optionsInput.shadowRoot.childNodes[1].style.backgroundColor='rgb(247, 247, 247)'
-    //     debugger
-    //     // console.log(rsp.rowEl.children[4].childNodes[1])
-    //     // rsp.rowEl.children[4].childNodes[1].innerHTML = 'test'
-    //     // console.log(rsp.rowEl.children[4].childNodes[1].innerHTML)
-    //   })
-    // })
-    // })
-  }
-
-  deleteColumn(index) {
-    this.columns.splice(index, 1)
-    this.columns = [...this.columns]
-  }
-
-  greyOutOptions() {
-    this.columns.forEach((_, index) => {
-      this.repeater.getItem(index).then(rsp => {
-        let optionsInput = rsp.rowEl.children[3]
-        // console.log(optionsInput.shadowRoot.childNodes[1].classList)
-        optionsInput.shadowRoot.childNodes[1].classList.remove('mdc-text-field--disabled')
-        optionsInput.shadowRoot.childNodes[1].style.backgroundColor = 'rgb(247, 247, 247)'
-        // debugger
-        // console.log(rsp.rowEl.children[4].childNodes[1])
-        // rsp.rowEl.children[4].childNodes[1].innerHTML = 'test'
-        // console.log(rsp.rowEl.children[4].childNodes[1].innerHTML)
-      })
-    })
   }
 
   @Listen('lumaInput')
@@ -112,7 +59,6 @@ export class AddSchema {
       let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
       let rowKey = event.path[0].getAttribute('row-key')
       if (rowKey == 'type') {
-        // debugger
         this.columns[lumaRowIndex][rowKey] = event.detail.value
         let optionsInput = null
         if (event.detail.value == 'Dropdown') {
@@ -155,6 +101,31 @@ export class AddSchema {
       this.columns.splice(event.detail.rowIndex, 1)
       this.repeater.setData(this.columns)
     }
+  }
+
+  @Method()
+  updateColumns(tableName = '') {
+    this.cancelbtn.style.width = ''
+    this.cancelbtn.style.paddingRight = '10px'
+    this.savebtn.style.width = ''
+    this.savebtn.style.flex = ''
+    this.addbtn.style.width = ''
+    this.addbtn.style.flex = ''
+    this.headerInput.style.width = '100%'
+    this.repeater.style.width = '100%'
+    this.tableName = tableName
+    this.columns = []
+  }
+
+
+  addColumn() {
+    this.columns = [...this.columns, { columnName: '', type: '', devName: '', options: '', 'active': true }]
+    this.repeater.addItem({ columnName: '', 'type': '', 'devName': '', 'options': '', 'active': true })
+  }
+
+  deleteColumn(index) {
+    this.columns.splice(index, 1)
+    this.columns = [...this.columns]
   }
 
   camelCase(str) {
@@ -201,7 +172,7 @@ export class AddSchema {
         self.invalidInput = true
       }
     })
-    if(this.columns.length == 0){
+    if (this.columns.length == 0) {
       this.invalidInput = true
     }
     return new Promise((resolve) => {
@@ -351,20 +322,20 @@ export class AddSchema {
       <div id="parent" ref={(el) => this.parent = el as HTMLElement}>
         <div id='wrapper'>
           <luma-input-text id="add-schema-header" class="add-schema-header" placeholder='Table Name' input-style="filled" value={this.tableName} primary-color="#244862" pattern='^[a-zA-Z1-9-]+$' ref={(el) => this.headerInput = el as HTMLElement} required></luma-input-text>
-        <div class='repeater-overflow'>
-          <luma-repeater id="add-schema-repeater" class="row-container" template={template} template-css-classes={styles} ref={(el) => this.repeater = el as HTMLElement}></luma-repeater>
-        </div>
-        <div>
-          <luma-button id="add-row" class='add-row' text="Add" icon="control_point" button-type="flat" primary-color="#FFF" onClick={() => this.addColumn()} ref={(el) => this.addbtn = el as HTMLElement}></luma-button>
-        </div>
-        <div class="edit-schema-footer">
-          <div id="bottom-row-spacer"></div>
+          <div class='repeater-overflow'>
+            <luma-repeater id="add-schema-repeater" class="row-container" template={template} template-css-classes={styles} ref={(el) => this.repeater = el as HTMLElement}></luma-repeater>
+          </div>
           <div>
-            <luma-button id="cancel-schema" class='cancel-schema' text="Cancel" primary-color="#244862" onClick={() => this.cancel()} ref={(el) => this.cancelbtn = el as HTMLElement}></luma-button>
-            <luma-button id="save-schema" text="Create" primary-color="#244862" onClick={() => this.createTable()} ref={(el) => this.savebtn = el as HTMLElement}></luma-button>
+            <luma-button id="add-row" class='add-row' text="Add" icon="control_point" button-type="flat" primary-color="#FFF" onClick={() => this.addColumn()} ref={(el) => this.addbtn = el as HTMLElement}></luma-button>
+          </div>
+          <div class="edit-schema-footer">
+            <div id="bottom-row-spacer"></div>
+            <div>
+              <luma-button id="cancel-schema" class='cancel-schema' text="Cancel" primary-color="#244862" onClick={() => this.cancel()} ref={(el) => this.cancelbtn = el as HTMLElement}></luma-button>
+              <luma-button id="save-schema" text="Create" primary-color="#244862" onClick={() => this.createTable()} ref={(el) => this.savebtn = el as HTMLElement}></luma-button>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     )
   }

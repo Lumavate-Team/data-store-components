@@ -8,12 +8,13 @@ import { Component, Prop, Event, EventEmitter, Listen, Element } from '@stencil/
 })
 export class DataStoreSidebarItem {
 
-  @Prop() tableName
-  @Prop() records
-
   currentTable = null
   tableItem: HTMLElement
+
   @Element() el: HTMLElement
+
+  @Prop() tableName
+  @Prop() records
 
   @Event({ eventName: 'table', composed: true, bubbles: true, cancelable: false }) tableEvent: EventEmitter
   @Event({ eventName: 'highlight', composed: true, bubbles: true, cancelable: false }) highlightEvent: EventEmitter
@@ -29,7 +30,6 @@ export class DataStoreSidebarItem {
   }
 
   highlight(tableName) {
-    // debugger
     if (tableName != this.tableName) {
       this.tableItem.style.backgroundColor = '#f7f7f7'
     } else if (this.tableItem.style.backgroundColor != 'rgba(0, 0, 0, 0.3)') {
