@@ -10,7 +10,6 @@ export class DataStoreSidebar {
 
   addTableTag
   initialLoad = true
-  test = [1, 2, 3, 4, 5, 6, 7, 8]
   namespace
   url = '/ic/data-store/manage/type'
 
