@@ -354,12 +354,13 @@ export class EditSchema {
     #column-toggle{
       width: unset !important;
       padding-top: 33px;
-      padding-right: 6px;
+      padding-right: 9px;
     }
 
     :host .repeater-item{
-      height: 104px;
+      height: 100px;
       padding:0px;
+      margin: 5px;
       display:flex;
     }
 

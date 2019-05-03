@@ -278,6 +278,7 @@ export class AddSchema {
   :host .repeater-item{
     height: 100px;
     padding:0px;
+    margin: 5px;
     display:flex;
   }
 
