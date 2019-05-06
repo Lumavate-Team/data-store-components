@@ -113,7 +113,8 @@ export class AddSchema {
     this.addbtn.style.flex = ''
     this.headerInput.style.width = '100%'
     this.repeater.style.width = '100%'
-    this.columns = []
+    this.columns = [{ columnName: '', 'type': '', 'devName': '', 'options': '', 'active': true }]
+    this.repeater.addItem({ columnName: '', 'type': '', 'devName': '', 'options': '', 'active': true })
   }
 
 
