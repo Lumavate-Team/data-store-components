@@ -131,7 +131,7 @@ export class EditSchema {
           }
         }
       }
-      if (rowKey == 'toggle') {
+      if (rowKey == 'active') {
         this.columns[lumaRowIndex][rowKey] = event.detail.value
       }
     }
@@ -317,7 +317,7 @@ export class EditSchema {
       <luma-select id="type" row-key="type" class="edit-schema-row-item" primary-color="#244862" option-csv="Text,Numeric,Dropdown,Image" selected-value={type} placeholder="Select Type" select-style="filled" required></luma-select>
       <luma-input-text id="devName" row-key="devName" class="edit-schema-row-item" primary-color="#244862" placeholder="Dev Name" input-style="filled" value={devName} readonly="true"></luma-input-text>
       <luma-input-text id="options" row-key="options" class="edit-schema-row-item" primary-color="#244862" pattern='^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$' input-style="filled" value={options} disabled="true"></luma-input-text>
-      <luma-toggle id='column-toggle' class='column-toggle' row-key="toggle" secondary-color='#244862' value={active} ></luma-toggle>`
+      <luma-toggle id='column-toggle' class='column-toggle' row-key="active" secondary-color='#244862' value={active} ></luma-toggle>`
 
     let templateNewRows = `
       <luma-input-text id="columnName" row-key="columnName" class="edit-schema-row-item" primary-color="#244862" placeholder="Column Name" input-style="filled" value={columnName} required></luma-input-text>
