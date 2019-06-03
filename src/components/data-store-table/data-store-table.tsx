@@ -82,12 +82,12 @@ export class DataStoreTable {
     if (this.tableName == '') {
         return (
           <div class='placeholder'>
-            <img class='table-logo' src='/ic/data-store/manage/componentset/asset/Table/png' />
+            <img class='table-logo' src='/ic/data-store/manage/componentset/asset/Table.png' />
             <div class='placeholder-header'>Looks like you haven’t added any tables</div>
             <div class='placeholder-guide'>Data Tables are used to structure information that an experience uses and/or stores. Add and manage data through an import/export of a CSV file. </div>
             <div class='arrow-wrapper'>
               <div class='left-spacer'>
-                <img class='arrow-logo' src='/ic/data-store/manage/componentset/asset/Arrow/png'/>
+                <img class='arrow-logo' src='/ic/data-store/manage/componentset/asset/Arrow.png'/>
               </div>
               <div class='right-spacer' ></div>
             </div>
