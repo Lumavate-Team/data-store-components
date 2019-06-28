@@ -68,6 +68,12 @@ export class DataStoreSidebar {
     var cookies = document.cookie.split(";")
     for (var i = 0, len = cookies.length; i < len; i++) {
       var cookie = cookies[i].split("=")
+      if ( cookie[0].trim() == "manage_jwt") {
+        return cookie[1].trim()
+      }
+    }
+    for (var i = 0, len = cookies.length; i < len; i++) {
+      var cookie = cookies[i].split("=")
       if (cookie[0].trim() == "pwa_jwt") {
         return cookie[1].trim()
       }
