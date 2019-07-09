@@ -78,10 +78,10 @@ export class DeleteTable {
           </div>
           <div class='row'>
             <div class='inner-row'>
-              <luma-button id='ds-cancel' text='Cancel' primary-color='#244862' onClick={() => this.cancel()}></luma-button>
+              <luma-button id='ds-delete' text='Delete' primary-color='#244862' onClick={() => this.delete()}></luma-button>
             </div>
             <div class='inner-row'>
-              <luma-button id='ds-delete' text='Delete' primary-color='#244862' onClick={() => this.delete()}></luma-button>
+              <luma-button id='ds-cancel' text='Cancel' primary-color='#244862' onClick={() => this.cancel()}></luma-button>
             </div>
           </div>
         </div>
