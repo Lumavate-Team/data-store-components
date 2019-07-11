@@ -21,6 +21,7 @@ export class EditSchema {
   url = '/ic/data-store/manage/'
   body
   oldColumnOffset
+  timeouts = []
 
   @Element() el: HTMLElement
 
@@ -52,26 +53,60 @@ export class EditSchema {
         let rowKey = event.path[0].getAttribute('row-key')
         if (repeaterId == 'edit-schema-repeater-old') {
           this.columns[lumaRowIndex][rowKey] = event.detail.value
-          if (rowKey == 'columnName') {
-            this.repeaterOldColumns.getItem(lumaRowIndex).then((rsp) => {
+          this.repeaterOldColumns.getItem(lumaRowIndex).then((rsp) => {
+            if (rowKey == 'columnName') {
               let devNameInput = rsp.rowEl.children[2]
               if (this.columns[lumaRowIndex]['newColumn'] == true) {
                 devNameInput.value = this.camelCase(event.detail.value)
                 this.columns[lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
               }
-            })
-          }
+            }
+            if (rowKey == 'options') {
+              let optionsInput = rsp.rowEl.children[3]
+              this.timeouts.forEach(time => {
+                clearTimeout(time)
+              });
+              optionsInput.getInputData().then((rsp) => {
+                let timeout = setTimeout(() => {
+                  if (rsp.isValid) {
+                    optionsInput.setValidationMessage('')
+                  } else {
+                    optionsInput.setValidationMessage('Please fill in with csv format')
+                  }
+                }, 350)
+                this.timeouts.push(timeout)
+              })
+            }
+          })
+
         } else {
           this.columns[lumaRowIndex + this.oldColumnOffset][rowKey] = event.detail.value
-          if (rowKey == 'columnName') {
-            this.repeaterNewColumns.getItem(lumaRowIndex).then((rsp) => {
+          this.repeaterNewColumns.getItem(lumaRowIndex).then((rsp) => {
+            if (rowKey == 'columnName') {
               let devNameInput = rsp.rowEl.children[2]
               if (this.columns[lumaRowIndex + this.oldColumnOffset]['newColumn'] == true) {
                 devNameInput.value = this.camelCase(event.detail.value)
                 this.columns[lumaRowIndex + this.oldColumnOffset]['devName'] = this.camelCase(event.detail.value)
               }
-            })
-          }
+
+            }
+            if (rowKey == 'options') {
+              let optionsInput = rsp.rowEl.children[3]
+              this.timeouts.forEach(time => {
+                clearTimeout(time)
+              });
+              optionsInput.getInputData().then((rsp) => {
+              let timeout = setTimeout(() => {
+                  if (rsp.isValid) {
+                    optionsInput.setValidationMessage('')
+                  } else {
+                    optionsInput.setValidationMessage('Please fill in with csv format')
+                  }
+                }, 50)
+                this.timeouts.push(timeout)
+              })
+            }
+          })
         }
       }
     }
@@ -104,7 +139,7 @@ export class EditSchema {
               this.columns[lumaRowIndex]['options'] = ''
               setTimeout(() => {
                 optionsInput.getInputData()
-              }, 25);
+              }, 25)
             })
           }
         } else {
@@ -133,6 +168,32 @@ export class EditSchema {
       }
       if (rowKey == 'active') {
         this.columns[lumaRowIndex][rowKey] = event.detail.value
+      }
+
+      if (rowKey == 'options') {
+        if (repeaterId == 'edit-schema-repeater-old') {
+          this.repeaterOldColumns.getItem(lumaRowIndex).then((rsp) => {
+            let optionsInput = rsp.rowEl.children[3]
+            optionsInput.getInputData().then((rsp) => {
+              if (rsp.isValid) {
+                optionsInput.setValidationMessage('')
+              } else {
+                optionsInput.setValidationMessage('Please fill in with csv format')
+              }
+            })
+          })
+        } else{
+          this.repeaterNewColumns.getItem(lumaRowIndex).then((rsp) => {
+            let optionsInput = rsp.rowEl.children[3]
+            optionsInput.getInputData().then((rsp) => {
+              if (rsp.isValid) {
+                optionsInput.setValidationMessage('')
+              } else {
+                optionsInput.setValidationMessage('Please fill in with csv format')
+              }
+            })
+          })
+        }
       }
     }
   }
@@ -201,7 +262,7 @@ export class EditSchema {
     var cookies = document.cookie.split(";")
     for (var i = 0, len = cookies.length; i < len; i++) {
       var cookie = cookies[i].split("=")
-      if ( cookie[0].trim() == "manage_jwt") {
+      if (cookie[0].trim() == "manage_jwt") {
         return cookie[1].trim()
       }
     }

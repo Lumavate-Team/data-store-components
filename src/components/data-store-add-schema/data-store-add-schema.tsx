@@ -17,6 +17,7 @@ export class AddSchema {
   invalidInput = false
   body
   url = '/ic/data-store/manage/'
+  timeouts = []
 
   @Element() el: HTMLElement
 
@@ -42,13 +43,29 @@ export class AddSchema {
         let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
         let rowKey = event.path[0].getAttribute('row-key')
         this.columns[lumaRowIndex][rowKey] = event.detail.value
-        if (rowKey == 'columnName') {
-          this.repeater.getItem(lumaRowIndex).then((rsp) => {
+        this.repeater.getItem(lumaRowIndex).then((rsp) => {
+          if (rowKey == 'columnName') {
             let devNameInput = rsp.rowEl.children[2]
             devNameInput.value = this.camelCase(event.detail.value)
             this.columns[lumaRowIndex]['devName'] = this.camelCase(event.detail.value)
-          })
-        }
+          }
+          if (rowKey == 'options') {
+            let optionsInput = rsp.rowEl.children[3]
+            this.timeouts.forEach(time => {
+              clearTimeout(time)
+            });
+            optionsInput.getInputData().then((rsp) => {
+              let timeout = setTimeout(() => {
+                if (rsp.isValid) {
+                  optionsInput.setValidationMessage('')
+                } else {
+                  optionsInput.setValidationMessage('Please fill in with csv format')
+                }
+              }, 350)
+              this.timeouts.push(timeout)
+            })
+          }
+        })
       }
     }
   }
@@ -91,6 +108,18 @@ export class AddSchema {
           status.parentNode.childNodes[1].innerText = 'Inactive'
         }
 
+      }
+      if (rowKey == 'options') {
+        this.repeater.getItem(lumaRowIndex).then((rsp) => {
+          let optionsInput = rsp.rowEl.children[3]
+          optionsInput.getInputData().then((rsp) => {
+            if (rsp.isValid) {
+              optionsInput.setValidationMessage('')
+            } else {
+              optionsInput.setValidationMessage('Please fill in with csv format')
+            }
+          })
+        })
       }
     }
   }
@@ -158,7 +187,7 @@ export class AddSchema {
     var cookies = document.cookie.split(";")
     for (var i = 0, len = cookies.length; i < len; i++) {
       var cookie = cookies[i].split("=")
-      if ( cookie[0].trim() == "manage_jwt") {
+      if (cookie[0].trim() == "manage_jwt") {
         return cookie[1].trim()
       }
     }
