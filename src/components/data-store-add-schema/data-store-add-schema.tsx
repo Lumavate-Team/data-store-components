@@ -18,6 +18,8 @@ export class AddSchema {
   body
   url = '/ic/data-store/manage/'
   timeouts = []
+  csvValidationMessage = 'Options must be a comma-delimited string'
+  tableValidationMessage = 'Table name must be alphanumeric characters or dashes'
 
   @Element() el: HTMLElement
 
@@ -39,6 +41,7 @@ export class AddSchema {
       let inputElId = event.detail.lumaElement.id
       if (inputElId == 'add-schema-header') {
         this.tableName = event.detail.value
+        this.setInputValidationMessage(this.headerInput,this.tableValidationMessage, 250)
       } else {
         let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
         let rowKey = event.path[0].getAttribute('row-key')
@@ -51,19 +54,7 @@ export class AddSchema {
           }
           if (rowKey == 'options') {
             let optionsInput = rsp.rowEl.children[3]
-            this.timeouts.forEach(time => {
-              clearTimeout(time)
-            });
-            optionsInput.getInputData().then((rsp) => {
-              let timeout = setTimeout(() => {
-                if (rsp.isValid) {
-                  optionsInput.setValidationMessage('')
-                } else {
-                  optionsInput.setValidationMessage('Please fill in with csv format')
-                }
-              }, 350)
-              this.timeouts.push(timeout)
-            })
+            this.setInputValidationMessage(optionsInput,this.csvValidationMessage, 500)
           }
         })
       }
@@ -75,6 +66,10 @@ export class AddSchema {
     if (event.srcElement.tagName == 'DATA-STORE-ADD-SCHEMA') {
       let lumaRowIndex = event.path[0].getAttribute('luma-row-index')
       let rowKey = event.path[0].getAttribute('row-key')
+      let headerId = event.detail.lumaElement.id
+      if(headerId =='add-schema-header'){
+        this.setInputValidationMessage(this.headerInput,this.tableValidationMessage, 10)
+      }
       if (rowKey == 'type') {
         this.columns[lumaRowIndex][rowKey] = event.detail.value
         let optionsInput = null
@@ -112,18 +107,28 @@ export class AddSchema {
       if (rowKey == 'options') {
         this.repeater.getItem(lumaRowIndex).then((rsp) => {
           let optionsInput = rsp.rowEl.children[3]
-          optionsInput.getInputData().then((rsp) => {
-            if (rsp.isValid) {
-              optionsInput.setValidationMessage('')
-            } else {
-              optionsInput.setValidationMessage('Please fill in with csv format')
-            }
-          })
+          this.setInputValidationMessage(optionsInput,this.csvValidationMessage, 10)
         })
       }
     }
   }
 
+
+  setInputValidationMessage(inputTag, message, timeoutDuration){
+    this.timeouts.forEach(time => {
+      clearTimeout(time)
+    });
+    inputTag.getInputData().then((rsp) => {
+    let timeout = setTimeout(() => {
+        if (rsp.isValid) {
+          inputTag.setValidationMessage('')
+        } else {
+          inputTag.setValidationMessage(message)
+        }
+      }, timeoutDuration)
+      this.timeouts.push(timeout)
+    })
+  }
   @Listen('lumaClick')
   handleClick(event) {
     if (event.detail.element.id == 'button_delete-row') {

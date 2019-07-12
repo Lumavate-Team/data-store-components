@@ -22,7 +22,7 @@ export class EditSchema {
   body
   oldColumnOffset
   timeouts = []
-
+  csvValidationMessage = 'Options must be a comma-delimited string'
   @Element() el: HTMLElement
 
   @State() tableName
@@ -63,19 +63,7 @@ export class EditSchema {
             }
             if (rowKey == 'options') {
               let optionsInput = rsp.rowEl.children[3]
-              this.timeouts.forEach(time => {
-                clearTimeout(time)
-              });
-              optionsInput.getInputData().then((rsp) => {
-                let timeout = setTimeout(() => {
-                  if (rsp.isValid) {
-                    optionsInput.setValidationMessage('')
-                  } else {
-                    optionsInput.setValidationMessage('Please fill in with csv format')
-                  }
-                }, 350)
-                this.timeouts.push(timeout)
-              })
+              this.setInputValidationMessage(optionsInput,this.csvValidationMessage, 500)
             }
           })
 
@@ -92,19 +80,7 @@ export class EditSchema {
             }
             if (rowKey == 'options') {
               let optionsInput = rsp.rowEl.children[3]
-              this.timeouts.forEach(time => {
-                clearTimeout(time)
-              });
-              optionsInput.getInputData().then((rsp) => {
-              let timeout = setTimeout(() => {
-                  if (rsp.isValid) {
-                    optionsInput.setValidationMessage('')
-                  } else {
-                    optionsInput.setValidationMessage('Please fill in with csv format')
-                  }
-                }, 50)
-                this.timeouts.push(timeout)
-              })
+              this.setInputValidationMessage(optionsInput,this.csvValidationMessage, 500)
             }
           })
         }
@@ -174,28 +150,33 @@ export class EditSchema {
         if (repeaterId == 'edit-schema-repeater-old') {
           this.repeaterOldColumns.getItem(lumaRowIndex).then((rsp) => {
             let optionsInput = rsp.rowEl.children[3]
-            optionsInput.getInputData().then((rsp) => {
-              if (rsp.isValid) {
-                optionsInput.setValidationMessage('')
-              } else {
-                optionsInput.setValidationMessage('Please fill in with csv format')
-              }
-            })
+            this.setInputValidationMessage(optionsInput,this.csvValidationMessage, 10)
           })
         } else{
           this.repeaterNewColumns.getItem(lumaRowIndex).then((rsp) => {
             let optionsInput = rsp.rowEl.children[3]
-            optionsInput.getInputData().then((rsp) => {
-              if (rsp.isValid) {
-                optionsInput.setValidationMessage('')
-              } else {
-                optionsInput.setValidationMessage('Please fill in with csv format')
-              }
-            })
+            this.setInputValidationMessage(optionsInput,this.csvValidationMessage, 10)
           })
         }
       }
     }
+  }
+
+
+  setInputValidationMessage(inputTag, message, timeoutDuration){
+    this.timeouts.forEach(time => {
+      clearTimeout(time)
+    });
+    inputTag.getInputData().then((rsp) => {
+    let timeout = setTimeout(() => {
+        if (rsp.isValid) {
+          inputTag.setValidationMessage('')
+        } else {
+          inputTag.setValidationMessage(message)
+        }
+      }, timeoutDuration)
+      this.timeouts.push(timeout)
+    })
   }
 
   @Listen('lumaClick')
