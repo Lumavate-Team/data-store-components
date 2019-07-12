@@ -114,7 +114,7 @@ export class DataStoreTable {
                     : <div class='text'>{this.tableData.length} Attributes</div>
                   }
                   <div class='text dash'> -</div>
-                  <div class='text'>/ic/data-store/{this.tableName}</div>
+                  <div class='text'>/{this.tableName}</div>
                 </div>
               </div>
               <div id='right'>
