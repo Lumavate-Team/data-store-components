@@ -163,18 +163,7 @@ export class AddSchema {
   }
 
   camelCase(str) {
-    return str.replace(/[-]/g, ' ') // convert hyphens to spaces
-      .replace(/\s[a-z]/g, this.upperCase)//uppercase first letter of words
-      .replace(/\s+/g, '') // remove spaces
-      .replace(/^[A-Z]/g, this.lowerCase)// lowercase first letter
-  }
-
-  upperCase(str) {
-    return str.toUpperCase()
-  }
-
-  lowerCase(str) {
-    return str.toLowerCase()
+    return str.replace(/\s+/g, '')
   }
 
   handleHeaderInput(event) {
