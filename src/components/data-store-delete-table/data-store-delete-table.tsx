@@ -40,7 +40,6 @@ export class DeleteTable {
     this.containsDataEl.style.flexDirection = 'column'
     this.containsDataEl.style.justifyContent = 'center'
     this.containsDataEl.style.alignItems = 'center'
-
   }
 
   cancel() {
@@ -74,14 +73,14 @@ export class DeleteTable {
       <div id='parent' ref={(el) => this.parent = el as HTMLElement}>
         <div id='delete' ref={(el) => this.deleteEl = el as HTMLElement}>
           <div class='header'>
-            Permanently delete table?
+            This action cannot be undone.  Are you sure you want to permanently delete this table?
           </div>
           <div class='row'>
             <div class='inner-row'>
-              <luma-button id='ds-delete' text='Delete' primary-color='#244862' onClick={() => this.delete()}></luma-button>
+              <luma-button id='ds-cancel' text='Cancel' primary-color='#244862' onClick={() => this.cancel()}></luma-button>
             </div>
             <div class='inner-row'>
-              <luma-button id='ds-cancel' text='Cancel' primary-color='#244862' onClick={() => this.cancel()}></luma-button>
+              <luma-button id='ds-delete' text='Yes, permanently delete' primary-color='#fc2727' onClick={() => this.delete()}></luma-button>
             </div>
           </div>
         </div>
