@@ -139,7 +139,7 @@ export class FileUtil {
           <div class='spacer'></div>
           <div class='spacer'>{this.tableName}</div>
           <div class='spacer-end'>
-            <i class="material-icons padding-right" onClick={() => this.cancel()} >close</i>
+            <i class="material-icons padding-right cursor" onClick={() => this.cancel()} >close</i>
           </div>
           </div>
           <div class='title-row'>
