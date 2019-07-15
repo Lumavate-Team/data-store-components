@@ -1,11 +1,11 @@
 :host {
-  height: 75px;
   font-family: "Roboto", sans-serif;
   font-size: 22;
   font-stretch: normal;
   line-height: normal;
   letter-spacing: normal;
   min-width: 0px;
+  height: 100vh;
 
   .material-icons {
     font-family: "Material Icons";
@@ -23,11 +23,17 @@
     -webkit-font-smoothing: antialiased;
     cursor: pointer;
   }
+  
+  #parent{
+    height: calc(100% - 4px);
+  }
 
   #table {
     box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
     margin-left: 27px;
     margin-right: 27px;
+    overflow-y: auto;
+    max-height: calc(100% - 95px);
   }
 
   #left {
