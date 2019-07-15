@@ -20,6 +20,7 @@ export class DataStoreTableItem {
           <div class='row-item' >{this.row['type']}</div>
           <div class='row-item' >{this.row['devName']}</div>
           <div class='row-item' >{this.row['options']}</div>
+          <div class='row-item' >{this.row['active']}</div>
           <div class='spacer'></div>
         </div>
       )
@@ -32,6 +33,9 @@ export class DataStoreTableItem {
           <div class='row-item' >{this.row['type']}</div>
           <div class='row-item' >{this.row['devName']}</div>
           <div class='row-item options' >{this.row['options']}</div>
+          {this.row['active']
+            ? <div class='row-item' >Active</div>
+            : <div class='row-item' >Inactive</div> }
           <div class='spacer'></div>
         </div>
       )

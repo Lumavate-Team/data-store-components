@@ -10,7 +10,7 @@ import { Component, Prop, Listen, State } from '@stencil/core';
 export class DataStoreTable {
 
   url = '/ic/data-store/manage/'
-  header = { 'columnName': 'Column', 'type': 'Type', 'devName': 'Dev Name', 'options': 'Options', 'Header': true }
+  header = { 'columnName': 'Column', 'type': 'Type', 'devName': 'Dev Name', 'options': 'Options', 'Header': true, 'active': 'Active' }
   editTableTag
   deleteTableTag
   fileUtilTag
@@ -161,7 +161,7 @@ export class DataStoreTable {
                     : <div class='text'>{this.tableData.length} Attributes</div>
                   }
                   <div class='text dash'> -</div>
-                  <div class='text'>/ic/data-store/{this.tableName}</div>
+                  <div class='text'>/{this.tableName}</div>
                 </div>
               </div>
               <div id='right'>
