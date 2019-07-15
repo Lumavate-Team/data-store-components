@@ -278,7 +278,6 @@ export class EditSchema {
 
   checkNewInputs() {
     let self = this
-    self.invalidInput = false
 
     if (this.columns.length != this.oldColumnOffset) {
       return new Promise((resolve) => {
