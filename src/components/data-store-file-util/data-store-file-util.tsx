@@ -93,7 +93,7 @@ export class FileUtil {
         }).then(data => {
           if (data.error) {
             console.log(data.error)
-            this.initNotification(data.error, false, true)
+            this.initNotification(data, false, true)
             this.cancel()
           } else {
             this.initNotification(data.payload.data, true)
@@ -124,7 +124,11 @@ export class FileUtil {
       toast.line3 = 'Records Deleted: ' + text.recordsDeleted
     } else if(error){
       toast.error = true
-      toast.line1 = text
+      if(text.apiField){
+        toast.line1 = text.error + '. Field: ' + text.apiField
+      }else{
+        toast.line1 = text
+      }
     }else {
       toast.line1 = text
     }
