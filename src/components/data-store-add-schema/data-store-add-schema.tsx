@@ -272,7 +272,7 @@ export class AddSchema {
     <luma-input-text id="columnName" row-key="columnName" class="edit-schema-row-item" primary-color="#244862" placeholder="Column Name" input-style="filled" value={columnName} required></luma-input-text>
     <luma-select id="type" row-key="type" class="edit-schema-row-item" primary-color="#244862" option-csv="Text,Numeric,Dropdown,Image,Color,Rich Text,Font,Checkbox,Date,Time" selected-value={type} placeholder="Select Type" select-style="filled" required></luma-select>
     <luma-input-text id="devName" row-key="devName" class="edit-schema-row-item" primary-color="#244862" placeholder="Dev Name" input-style="filled" value={devName} readonly="true"></luma-input-text>
-    <luma-input-text id="options" row-key="options" class="edit-schema-row-item" primary-color="#244862" pattern='^[a-zA-Z0-9-]+(,[a-zA-Z0-9-]+)*$' input-style="filled" value={options} disabled="true"></luma-input-text>
+    <luma-input-text id="options" row-key="options" class="edit-schema-row-item" primary-color="#244862" pattern='^[a-zA-Z0-9- ]+(,[a-zA-Z0-9- ]+)*$' input-style="filled" value={options} disabled="true"></luma-input-text>
     <luma-button id="delete-row" class='delete-row' icon="remove_circle_outline" button-type="flat" primary-color="#f7f7f7"></luma-button>`
 
     let styles = `
